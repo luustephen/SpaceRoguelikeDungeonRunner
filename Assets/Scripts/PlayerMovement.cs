@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public KeyCode forward, backward, left, right, jump;
     private float horizontalMovement, verticalMovement;
+    private Rigidbody rb;
     public float speed;
 
 	// Use this for initialization
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour {
         horizontalMovement = 0;
         verticalMovement = 0;
         speed = .10f;*/
+        rb = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
@@ -55,6 +57,5 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         transform.Translate(horizontalMovement * speed, 0,verticalMovement * speed);
-        print(horizontalMovement+ " " + verticalMovement);
     }
 }
