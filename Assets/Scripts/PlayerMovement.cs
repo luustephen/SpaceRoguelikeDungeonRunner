@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour {
 
         }
 
-        if(!Input.GetKey(left) && !Input.GetKey(right) || Input.GetKey(left) && Input.GetKey(right)) //Slow to standstill if not hitting any buttons or both
+        if(!Input.GetKey(left) && !Input.GetKey(right) || Input.GetKey(left) && Input.GetKey(right)) //Slow to standstill if not hitting any buttons or hitting opposites
         {
             if (horizontalMovement < 0)
             {
@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour {
             
         }
 
-        if (!Input.GetKey(up) && !Input.GetKey(down) || Input.GetKey(up) && Input.GetKey(down)) //Slow to standstill if not hitting any buttons or both
+        if (!Input.GetKey(up) && !Input.GetKey(down) || Input.GetKey(up) && Input.GetKey(down)) //Slow to standstill if not hitting any buttons or hitting opposites
         {
             if (verticalMovement < 0)
             {
@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
-        if (lockU && verticalMovement > 0)
+        if (lockU && verticalMovement > 0)                                 //When colliding with wall, stop movement in that direction
             verticalMovement = 0;
         if (lockD && verticalMovement < 0)
             verticalMovement = 0;
@@ -114,13 +114,13 @@ public class PlayerMovement : MonoBehaviour {
         if (lockL && verticalMovement < 0)
             horizontalMovement = 0;
 
-        print(horizontalMovement + " " + verticalMovement);
-        transform.Translate(horizontalMovement, 0,verticalMovement);
+        //print(horizontalMovement + " " + verticalMovement);             
+        transform.Translate(horizontalMovement, verticalMovement, 0);   //Move character in direction
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Left Wall")        //Collide with walls
+        if (other.tag == "Left Wall")        //Lock movement in direction of wall
         {
             lockL = true;
             horizontalMovement = 0;
