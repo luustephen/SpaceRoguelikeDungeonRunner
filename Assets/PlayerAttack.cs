@@ -9,6 +9,7 @@ public class PlayerAttack : MonoBehaviour {
     public float primaryAttackCooldown, secondaryAttackCooldown;
     private Transform attackHitbox;
     private SpriteRenderer attackSprite;
+    private BoxCollider attackCollider;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +23,7 @@ public class PlayerAttack : MonoBehaviour {
         secondaryAttackCooldown = .3f;
         attackHitbox = gameObject.transform.GetChild(1);
         attackSprite = attackHitbox.gameObject.GetComponent<SpriteRenderer>();
+        attackCollider  = attackHitbox.gameObject.GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -38,6 +40,7 @@ public class PlayerAttack : MonoBehaviour {
                 attackHitbox.Translate(new Vector3(x, y, 0));
                 attackHitbox.Rotate(new Vector3(0 ,0, Mathf.Rad2Deg * angle + 90));
                 attackSprite.enabled = true;
+                attackCollider.enabled = true;
                 StartCoroutine("PrimaryCooldown", angle);
             }
         }
@@ -58,6 +61,7 @@ public class PlayerAttack : MonoBehaviour {
         float y = Mathf.Sin(angle);
         float x = Mathf.Cos(angle);
         attackSprite.enabled = false;
+        attackCollider.enabled = false;
         attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * -angle - 90));
         attackHitbox.Translate(new Vector3(-x, -y, 0));
         primaryOnCooldown = false;
