@@ -10,6 +10,9 @@ public class PlayerAttack : MonoBehaviour {
     private Transform attackHitbox;
     private SpriteRenderer attackSprite;
     private BoxCollider attackCollider;
+    private int numSwingHitboxes;               //Odd number of swing hitboxes to create during swing
+    private float swingIncrementWidth;
+    public float swingWidth;
 
 	// Use this for initialization
 	void Start () {
@@ -19,16 +22,18 @@ public class PlayerAttack : MonoBehaviour {
          */
         primaryOnCooldown = false;
         secondaryOnCooldown = false;
-        primaryAttackCooldown = .2f;
-        secondaryAttackCooldown = .3f;
+        //primaryAttackCooldown = .2f;
+        //secondaryAttackCooldown = .3f;
         attackHitbox = gameObject.transform.GetChild(1);
         attackSprite = attackHitbox.gameObject.GetComponent<SpriteRenderer>();
         attackCollider  = attackHitbox.gameObject.GetComponent<BoxCollider>();
+        numSwingHitboxes = 5;
+        swingIncrementWidth = swingWidth/numSwingHitboxes;
     }
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetKeyDown(primaryAttack))            //Start cooldown on primary attack
+        if (Input.GetKeyDown(primaryAttack))            //Move hitbox into swinging position and enable it
         {
             if (!primaryOnCooldown && !secondaryOnCooldown)
             {
@@ -55,11 +60,20 @@ public class PlayerAttack : MonoBehaviour {
         }
     }
 
-    IEnumerator PrimaryCooldown(float angle)
+    IEnumerator PrimaryCooldown(float angle)            //Wait for attack to end then move hitbox back and disable it
     {
-        yield return new WaitForSeconds(primaryAttackCooldown);
         float y = Mathf.Sin(angle);
         float x = Mathf.Cos(angle);
+        float returnX = attackHitbox.position.x;
+        print(attackHitbox.position.x);
+        attackHitbox.Translate(new Vector3( -numSwingHitboxes/2 * swingIncrementWidth, 0, 0));
+        yield return new WaitForSeconds(primaryAttackCooldown / numSwingHitboxes);
+        for (int i = 0; i < numSwingHitboxes; i++) {
+            attackHitbox.Translate(new Vector3(swingIncrementWidth, 0, 0));
+            yield return new WaitForSeconds(primaryAttackCooldown / numSwingHitboxes);
+        }
+        attackHitbox.Translate(new Vector3(-swingIncrementWidth * ((numSwingHitboxes / 2) + 1), 0, 0));
+        print(attackHitbox.position.x);
         attackSprite.enabled = false;
         attackCollider.enabled = false;
         attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * -angle - 90));
