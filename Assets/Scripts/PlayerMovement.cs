@@ -109,9 +109,9 @@ public class PlayerMovement : MonoBehaviour {
             verticalMovement = 0;
         if (lockD && verticalMovement < 0)
             verticalMovement = 0;
-        if (lockR && verticalMovement > 0)
+        if (lockR && horizontalMovement > 0)
             horizontalMovement = 0;
-        if (lockL && verticalMovement < 0)
+        if (lockL && horizontalMovement < 0)
             horizontalMovement = 0;
 
         //print(horizontalMovement + " " + verticalMovement);             

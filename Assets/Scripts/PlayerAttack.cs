@@ -65,7 +65,6 @@ public class PlayerAttack : MonoBehaviour {
         float y = Mathf.Sin(angle);
         float x = Mathf.Cos(angle);
         float returnX = attackHitbox.position.x;
-        print(attackHitbox.position.x);
         attackHitbox.Translate(new Vector3( -numSwingHitboxes/2 * swingIncrementWidth, 0, 0));
         yield return new WaitForSeconds(primaryAttackCooldown / numSwingHitboxes);
         for (int i = 0; i < numSwingHitboxes; i++) {
@@ -73,7 +72,6 @@ public class PlayerAttack : MonoBehaviour {
             yield return new WaitForSeconds(primaryAttackCooldown / numSwingHitboxes);
         }
         attackHitbox.Translate(new Vector3(-swingIncrementWidth * ((numSwingHitboxes / 2) + 1), 0, 0));
-        print(attackHitbox.position.x);
         attackSprite.enabled = false;
         attackCollider.enabled = false;
         attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * -angle - 90));
