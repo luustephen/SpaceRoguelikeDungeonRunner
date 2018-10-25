@@ -118,33 +118,9 @@ public class PlayerMovement : MonoBehaviour {
         transform.Translate(horizontalMovement, verticalMovement, 0);   //Move character in direction
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Left Wall")        //Lock movement in direction of wall
-        {
-            lockL = true;
-            horizontalMovement = 0;
-        }
-        if (other.tag == "Right Wall")
-        {
-            lockR = true;
-            horizontalMovement = 0;
-        }
-        if (other.tag == "Up Wall")
-        {
-            lockU = true;
-            verticalMovement = 0;
-        }
-        if (other.tag == "Down Wall")
-        {
-            lockD = true;
-            verticalMovement = 0;
-        }
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision detected");
+        Debug.Log("OnCollisionEnter executed");
 
         //Release movement lock after you walk away from a wall
         switch (collision.gameObject.tag)
@@ -152,9 +128,29 @@ public class PlayerMovement : MonoBehaviour {
             case "Left_Wall":
                 lockL = true;
                 break;
-            case "Right_Wall":
-                Debug.Log("Movement Locked");
+            case "Right Wall":
                 lockR = true;
+                break;
+            case "Up_Wall":
+                lockU = true;
+                break;
+            case "Down_Wall":
+                lockD = true;
+                break;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        Debug.Log("OnCollisionExit executed");
+
+        switch (collision.gameObject.tag)
+        {
+            case "Left_Wall":
+                lockL = false;
+                break;
+            case "Right Wall":
+                lockR = false;
                 break;
             case "Up_Wall":
                 lockU = false;
