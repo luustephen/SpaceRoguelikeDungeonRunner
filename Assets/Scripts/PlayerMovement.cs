@@ -148,10 +148,11 @@ public class PlayerMovement : MonoBehaviour {
         //Release movement lock after you walk away from a wall
         switch (collision.gameObject.tag)
         {
-            //case "Left Wall":
-            //    lockL = false;
-            //    break;
+            case "Left Wall":
+                lockL = false;
+                break;
             case "Right Wall":
+                Debug.Log("Movement Locked");
                 lockR = false;
                 break;
             case "Up Wall":
