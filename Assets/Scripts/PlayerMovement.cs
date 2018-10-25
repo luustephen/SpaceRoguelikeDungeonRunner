@@ -125,16 +125,16 @@ public class PlayerMovement : MonoBehaviour {
         //Release movement lock after you walk away from a wall
         switch (collision.gameObject.tag)
         {
-            case "Left_Wall":
+            case "Left Wall":
                 lockL = true;
                 break;
             case "Right Wall":
                 lockR = true;
                 break;
-            case "Up_Wall":
+            case "Up Wall":
                 lockU = true;
                 break;
-            case "Down_Wall":
+            case "Down Wall":
                 lockD = true;
                 break;
         }
@@ -146,16 +146,16 @@ public class PlayerMovement : MonoBehaviour {
 
         switch (collision.gameObject.tag)
         {
-            case "Left_Wall":
+            case "Left Wall":
                 lockL = false;
                 break;
             case "Right Wall":
                 lockR = false;
                 break;
-            case "Up_Wall":
+            case "Up Wall":
                 lockU = false;
                 break;
-            case "Down_Wall":
+            case "Down Wall":
                 lockD = false;
                 break;
         }
