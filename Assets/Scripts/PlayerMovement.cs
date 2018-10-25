@@ -145,20 +145,21 @@ public class PlayerMovement : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Collision detected");
+
         //Release movement lock after you walk away from a wall
         switch (collision.gameObject.tag)
         {
-            case "Left Wall":
-                lockL = false;
+            case "Left_Wall":
+                lockL = true;
                 break;
-            case "Right Wall":
+            case "Right_Wall":
                 Debug.Log("Movement Locked");
-                lockR = false;
+                lockR = true;
                 break;
-            case "Up Wall":
+            case "Up_Wall":
                 lockU = false;
                 break;
-            case "Down Wall":
+            case "Down_Wall":
                 lockD = false;
                 break;
         }
