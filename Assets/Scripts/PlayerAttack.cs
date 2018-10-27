@@ -8,14 +8,20 @@ public class PlayerAttack : MonoBehaviour {
     private bool primaryOnCooldown, secondaryOnCooldown;
     public float primaryAttackCooldown, secondaryAttackCooldown;
     private Transform attackHitbox;
+    private Transform attacksecondaryHitbox;
     private SpriteRenderer attackSprite;
+    private MeshRenderer secondaryattackSprite;
     private BoxCollider attackCollider;
+    private SphereCollider secondaryattackspriteCollider;
     private int numSwingHitboxes;               //Odd number of swing hitboxes to create during swing
     private float swingIncrementWidth;
     public float swingWidth;
+    public Rigidbody projectilePrefab;
+    public Rigidbody projectileInstance;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         /* 
          * primaryAttack = KeyCode.Mouse0
          * secondaryAttack = KeyCode.Mouse1;
@@ -54,7 +60,22 @@ public class PlayerAttack : MonoBehaviour {
         {
             if (!secondaryOnCooldown && !primaryOnCooldown)
             {
-                secondaryOnCooldown = true;
+                
+                Vector3 mousePosition = Input.mousePosition;
+                projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, attackHitbox.rotation) as Rigidbody;
+                float angle = Mathf.Atan2(mousePosition.y - Screen.height / 2, mousePosition.x - Screen.width / 2);
+                float y = Mathf.Sin(angle);
+                float x = Mathf.Cos(angle);
+                projectileInstance.AddForce(new Vector3(x, y, 0) * 1000);
+
+                secondaryOnCooldown = true; 
+                //secondaryattackSprite.enabled = true;
+                //secondaryattackspriteCollider.enabled = true;
+                //projectile.GetComponent<Rigidbody>().transform
+                //projectile.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+
+                //rigidBody.useGravity = true;
+                //rigidBody.MovePosition(mousePosition);
                 StartCoroutine("SecondaryCooldown");
             }
         }
