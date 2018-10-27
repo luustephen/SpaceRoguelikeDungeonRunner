@@ -280,6 +280,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &211208095
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.3502872
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.72917134
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0.05270648
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &224920309
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,14 +965,13 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_Drag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_UseGravity: 0
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_Constraints: 0
   m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!4 &592907201
 Transform:
   m_ObjectHideFlags: 0
@@ -994,6 +1035,7 @@ MonoBehaviour:
   primaryAttackCooldown: 0.03
   secondaryAttackCooldown: 0.2
   swingWidth: 1
+  projectile: {fileID: 4670725689674576, guid: 1149ed7dbdf389c43a6eecd54761706b, type: 2}
 --- !u!1 &602939507
 GameObject:
   m_ObjectHideFlags: 0
