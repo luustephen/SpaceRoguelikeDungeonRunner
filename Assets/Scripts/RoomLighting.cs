@@ -5,20 +5,23 @@ using UnityEngine;
 public class RoomLighting : MonoBehaviour {
 
     private GameObject[] players;
-    private GameObject[] roomLight;
     private Transform leftmostWall, rightmostWall, upmostWall, downmostWall;
     private GameObject floor;
     private int numPlayers;
-    private int numLights;
-    LightmapData[] lightmap_data;
+    public int layerLightsAmbient, layerLightsOn, layerLightsOff;
+    private bool explored;
+    public float maxLight;
+    private Light lightSource;
+    private bool lightOn;
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
+        explored = false;
         numPlayers = 1;                                 //Change for multiplayer
-        numLights = 4;
-        roomLight = new GameObject[numLights];
-        lightmap_data = LightmapSettings.lightmaps;
-        for (int i = 0; i < numPlayers; i++) { 
+        lightSource = GameObject.Find("Room Light On").GetComponent<Light>();
+        for (int i = 0; i < numPlayers; i++)
+        { 
             players = GameObject.FindGameObjectsWithTag("Player");
         }
         floor = transform.Find("floor").gameObject;
@@ -26,29 +29,39 @@ public class RoomLighting : MonoBehaviour {
         rightmostWall = transform.Find("rightmost wall");
         upmostWall = transform.Find("upmost wall");
         downmostWall = transform.Find("downmost wall");
-        print(leftmostWall.transform.position.x + " " + rightmostWall.transform.position.x + " " + upmostWall.transform.position.x + " " + downmostWall.transform.position.x);
     }
 	
 	// Update is called once per frame
-	void Update () {
-        for (int i = 0; i < players.Length; i++)
+	void Update ()
+    {
+        for (int i = 0; i < players.Length; i++)    //Check if Player is inside room or not, if so turn on lights, if already explored used ambient, if not use darkness
         {
             if (players[i].transform.position.x > leftmostWall.transform.position.x && players[i].transform.position.x < rightmostWall.transform.position.x && players[i].transform.position.y > downmostWall.transform.position.y && players[i].transform.position.y < upmostWall.transform.position.y)
             {
-                foreach (Transform child in transform) if (child.CompareTag("Light"))
-                    {
-                        child.gameObject.GetComponent<Light>().enabled = true;
-                    }
-                floor.layer = 9;
+                floor.layer = layerLightsOn;
+                if(!lightOn)
+                    StartCoroutine("TurnOn");
+                explored = true;
             }
             else
             {
-                foreach (Transform child in transform) if (child.CompareTag("Light"))
-                    {
-                        child.gameObject.GetComponent<Light>().enabled = false;
-                    }
-                floor.layer = 10;
+                lightOn = false;
+                if(explored)
+                    floor.layer = layerLightsAmbient;
+                else
+                    floor.layer = layerLightsOff;
             }
         }
 	}
+
+    IEnumerator TurnOn()                //Slowly turn on lights when entering a room
+    {
+        lightSource.intensity = .1f;
+        while (lightSource.intensity < maxLight)
+        {
+            lightSource.intensity += .05f;
+            yield return new WaitForSeconds(.01f);
+        }
+        lightOn = true;
+    }
 }
