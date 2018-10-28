@@ -10,21 +10,38 @@ public class PlayerHealth : MonoBehaviour {
     public Slider healthSlider;
 
     Animator anim;
+    PlayerMovement playerMovement;
+    bool isDead;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Awake()
+    {
         anim = GetComponent<Animator>();
+        playerMovement = GetComponent<PlayerMovement>();
         currentHealth = startingHealth;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        this.TakeDamage(1);
+    }
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.K))
+        {
+            this.TakeDamage(5);
+        }
     }
 
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
         healthSlider.value = currentHealth;
+        if (currentHealth <= 0 && !isDead)
+        {
+            Death();
+        }
+    }
+
+    void Death()
+    {
+        isDead = true;
+        playerMovement.enabled = false;
     }
 }
