@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour {
 
     public PlayerHealth playerHealth;
-    public float restartDelay = 5f;
+    public float restartDelay = 2f;
 
     Animator anim;
     float restartTimer;
@@ -15,11 +13,6 @@ public class GameOverManager : MonoBehaviour {
     {
         anim = GetComponent<Animator>();
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -30,7 +23,6 @@ public class GameOverManager : MonoBehaviour {
 
             if (restartTimer >= restartDelay)
             {
-                Application.LoadLevel(Application.loadedLevel);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
