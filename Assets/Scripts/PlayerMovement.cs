@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void FixedUpdate () {
         float x = transform.position.x;
         float y = transform.position.y;
         float z = transform.position.z;
@@ -120,7 +120,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionEnter executed");
+        //Debug.Log("OnCollisionEnter executed");
 
         //Release movement lock after you walk away from a wall
         switch (collision.gameObject.tag)
@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionExit executed");
+        //Debug.Log("OnCollisionExit executed");
 
         switch (collision.gameObject.tag)
         {
