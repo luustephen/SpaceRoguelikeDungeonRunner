@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009786535, g: 0.05188808, b: 0.1522932, a: 1}
+  m_IndirectSpecularColor: {r: 0.009786518, g: 0.051888436, b: 0.1522932, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -461,7 +461,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1f013f2a3b1d3f04da23915a26723f33, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -624,7 +624,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1599882994}
-  - {fileID: 1499713470}
   - {fileID: 766242514}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1029,9 +1028,10 @@ MonoBehaviour:
   primaryAttackCooldown: 0.03
   secondaryAttackCooldown: 0.2
   swingWidth: 1
-  projectilePrefab: {fileID: 54741418953483624, guid: 1149ed7dbdf389c43a6eecd54761706b,
+  projectilePrefab: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
     type: 2}
-  projectileInstance: {fileID: 0}
+  projectileInstance: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
+    type: 2}
 --- !u!1 &602939507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,7 +1147,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 489191799}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

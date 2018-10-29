@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        //Debug.Log("OnCollisionExit executed");
+        Debug.Log("OnCollisionExit executed");
 
         switch (collision.gameObject.tag)
         {
