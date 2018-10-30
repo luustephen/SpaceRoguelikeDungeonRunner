@@ -8,6 +8,8 @@ TagManager:
   - Left Wall
   - Up Wall
   - Down Wall
+  - Light
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -18,11 +20,11 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LightOn
+  - LightAmbient
+  - LightOff
+  - Entities
+  - Objects
   - 
   - 
   - 

@@ -19,7 +19,8 @@ public class PlayerAttack : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         /* 
          * primaryAttack = KeyCode.Mouse0
          * secondaryAttack = KeyCode.Mouse1;
@@ -36,7 +37,8 @@ public class PlayerAttack : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update ()
+    {
         if (Input.GetKeyDown(primaryAttack))            //Move hitbox into swinging position and enable it
         {
             if (!primaryOnCooldown && !secondaryOnCooldown)
