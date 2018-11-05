@@ -12,12 +12,18 @@ public class DoorOpen : MonoBehaviour
     private Vector3 openedPosition;                 //Door max opened position
     public float openDistance;                      //How far the door needs to move to open completely
     public float speed;                             //Door opening speed
+    public bool openVertical;
 
     // Use this for initialization
     void Start()
     {
         originalPosition = transform.position;
-        openedPosition = new Vector3(transform.position.x,(transform.position.y + openDistance), transform.position.z);
+
+        if(openVertical)
+            openedPosition = new Vector3(transform.position.x, transform.position.y + openDistance, transform.position.z);
+        else
+            openedPosition = new Vector3(transform.position.x + openDistance, transform.position.y, transform.position.z);
+
         numPlayers = 1;                                 //Change for multiplayer
         for (int i = 0; i < numPlayers; i++)
         {
@@ -28,15 +34,34 @@ public class DoorOpen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it
+        print(openVertical);
+        if (openVertical)
         {
-            if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.y  <= openedPosition.y)
+            for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it vertical
             {
-                transform.Translate(0, speed, 0);
+                print(openVertical);
+                if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.y <= openedPosition.y)
+                {
+                    transform.Translate(0, speed, 0);
+                }
+                else if ((Mathf.Abs(players[i].transform.position.x - originalPosition.x) > playerOpenDistance || Mathf.Abs(players[i].transform.position.y - originalPosition.y) > playerOpenDistance) && transform.position.y >= originalPosition.y)
+                {
+                    transform.Translate(0, -speed, 0);
+                }
             }
-            else if ((Mathf.Abs(players[i].transform.position.x - originalPosition.x) > playerOpenDistance || Mathf.Abs(players[i].transform.position.y - originalPosition.y) > playerOpenDistance) && transform.position.y >= originalPosition.y)
+        }
+        else
+        {
+            for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it horizontal
             {
-                transform.Translate(0, -speed, 0);
+                if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.x <= openedPosition.x)
+                {
+                    transform.Translate(speed, 0, 0);
+                }
+                else if ((Mathf.Abs(players[i].transform.position.x - originalPosition.x) > playerOpenDistance || Mathf.Abs(players[i].transform.position.y - originalPosition.y) > playerOpenDistance) && transform.position.x >= originalPosition.x)
+                {
+                    transform.Translate(-speed, 0, 0);
+                }
             }
         }
     }
