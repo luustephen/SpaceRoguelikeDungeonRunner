@@ -8,16 +8,14 @@ public class PlayerAttack : MonoBehaviour {
     private bool primaryOnCooldown, secondaryOnCooldown;
     public float primaryAttackCooldown, secondaryAttackCooldown;
     private Transform attackHitbox;
-    private Transform attacksecondaryHitbox;
     private SpriteRenderer attackSprite;
-    private MeshRenderer secondaryattackSprite;
     private BoxCollider attackCollider;
     private SphereCollider secondaryattackspriteCollider;
     private int numSwingHitboxes;               //Odd number of swing hitboxes to create during swing
     private float swingIncrementWidth;
     public float swingWidth;
-    public Rigidbody projectilePrefab;
-    public Rigidbody projectileInstance;
+    public Rigidbody2D projectilePrefab;
+    public Rigidbody2D projectileInstance;
 
 
     // Use this for initialization
@@ -62,9 +60,8 @@ public class PlayerAttack : MonoBehaviour {
         {
             if (!secondaryOnCooldown && !primaryOnCooldown)
             {
-                
                 Vector3 mousePosition = Input.mousePosition;
-                projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, attackHitbox.rotation) as Rigidbody;
+                projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
                 float angle = Mathf.Atan2(mousePosition.y - Screen.height / 2, mousePosition.x - Screen.width / 2);
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);

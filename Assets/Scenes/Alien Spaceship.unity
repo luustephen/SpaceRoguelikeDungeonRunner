@@ -919,7 +919,9 @@ MonoBehaviour:
   primaryAttackCooldown: 0.03
   secondaryAttackCooldown: 0.2
   swingWidth: 1
-  projectilePrefab: {fileID: 54741418953483624, guid: 1149ed7dbdf389c43a6eecd54761706b,
+  projectilePrefab: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
+    type: 2}
+  projectileInstance: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
     type: 2}
   projectileInstance: {fileID: 0}
 --- !u!1 &602939507
