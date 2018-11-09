@@ -10,6 +10,7 @@ TagManager:
   - Down Wall
   - Light
   - Floor
+  - Room
   layers:
   - Default
   - TransparentFX
