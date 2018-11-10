@@ -11,6 +11,11 @@ TagManager:
   - Light
   - Floor
   - Room
+  - Up Door
+  - Down Door
+  - Left Door
+  - Right Door
+  - Hallway
   layers:
   - Default
   - TransparentFX
