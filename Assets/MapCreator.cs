@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * OLD CODE DON'T USE, USE MAPBUILDER.CS INSTEAD, ONLY HERE FOR REFERENCE
+ * 
+ * 
+*/
 public class MapCreator : MonoBehaviour
 {
 
