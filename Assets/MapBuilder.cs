@@ -131,6 +131,7 @@ public class MapBuilder : MonoBehaviour {
                     {
                         first.leftRooms[i] = second;
                         second.rightRooms[k] = first;
+                        moveRoom(first, second, 0, 0);
                         return true;
                     }
                 }
@@ -146,6 +147,7 @@ public class MapBuilder : MonoBehaviour {
                     {
                         first.rightRooms[i] = second;
                         second.leftRooms[k] = first;
+                        moveRoom(first, second, 1, 0);
                         return true;
                     }
                 }
@@ -161,6 +163,7 @@ public class MapBuilder : MonoBehaviour {
                     {
                         first.upRooms[i] = second;
                         second.downRooms[k] = first;
+                        moveRoom(first, second, 2, 0);
                         return true;
                     }
                 }
@@ -176,6 +179,7 @@ public class MapBuilder : MonoBehaviour {
                     {
                         first.downRooms[i] = second;
                         second.upRooms[k] = first;
+                        moveRoom(first, second, 3, 0);
                         return true;
                     }
                 }
@@ -187,5 +191,33 @@ public class MapBuilder : MonoBehaviour {
     int checkRoomExits(Room room)
     {
         return room.leftRooms.Length + room.rightRooms.Length + room.upRooms.Length + room.downRooms.Length;
+    }
+
+    void moveRoom(Room first, Room second, int direction, int doorNum)
+    {
+        int i = 0;
+        foreach (Transform child in second.roomObject.transform)
+        {
+            if (child.tag == "Up Door" && direction == 3 && i++ == doorNum)
+            {
+                float difference = second.roomObject.transform.position.y - child.position.y;
+                second.roomObject.transform.position = new Vector3(first.roomObject.transform.position.x, first.roomObject.transform.position.y + difference*2, first.roomObject.transform.position.z);
+            }
+            if (child.tag == "Down Door" && direction == 2 && i++ == doorNum)
+            {
+                float difference = second.roomObject.transform.position.y - child.position.y;
+                second.roomObject.transform.position = new Vector3(first.roomObject.transform.position.x, first.roomObject.transform.position.y + difference*2, first.roomObject.transform.position.z);
+            }
+            if (child.tag == "Left Door" && direction == 1 && i++ == doorNum)
+            {
+                float difference = second.roomObject.transform.position.x - child.position.x;
+                second.roomObject.transform.position = new Vector3(first.roomObject.transform.position.x + difference, first.roomObject.transform.position.y, first.roomObject.transform.position.z);
+            }
+            if (child.tag == "Right Door" && direction == 0 && i++ == doorNum)
+            {
+                float difference = second.roomObject.transform.position.x - child.position.x;
+                second.roomObject.transform.position = new Vector3(first.roomObject.transform.position.x + difference, first.roomObject.transform.position.y, first.roomObject.transform.position.z);
+            }
+        }
     }
 }
