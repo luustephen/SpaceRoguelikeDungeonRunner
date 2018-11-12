@@ -34,12 +34,10 @@ public class DoorOpen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(openVertical);
         if (openVertical)
         {
             for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it vertical
             {
-                print(openVertical);
                 if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.y <= openedPosition.y)
                 {
                     transform.Translate(0, speed, 0);

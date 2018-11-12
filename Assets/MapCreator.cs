@@ -19,6 +19,27 @@ public class MapCreator : MonoBehaviour
         public Room[] downRooms = new Room[2];
         public Room[] leftRooms = new Room[2];
         public Room[] rightRooms = new Room[2];
+
+        public Room Copy()
+        {
+            Room copy = new Room();
+            copy.roomObject = this.roomObject;
+            copy.leftDoors = this.leftDoors;
+            copy.rightDoors = this.rightDoors;
+            copy.upDoors = this.upDoors;
+            copy.downDoors = this.downDoors;
+            copy.numDownDoors = this.numDownDoors;
+            copy.numLeftDoors = this.numLeftDoors;
+            copy.numRightDoors = this.numRightDoors;
+            copy.numUpDoors = this.numUpDoors;
+            copy.exits = this.exits;
+            copy.isHallway = this.isHallway;
+            copy.upRooms = new Room[2];
+            copy.downRooms = new Room[2];
+            copy.leftRooms = new Room[2];
+            copy.rightRooms = new Room[2];
+            return copy;
+        }
     }
 
     public GameObject[] prebuiltRooms;              //Array of gameobjects for the editor
@@ -84,31 +105,39 @@ public class MapCreator : MonoBehaviour
         GameObject[] path = new GameObject[numRooms / 4 * 3];       //Array of gameobjects for path objects
         Room[] pathRooms = new Room[numRooms / 4 * 3];              //Room information for path array
         int currentNumRooms = numRooms - 2;
-        path[0] = prebuiltRooms[0];                                 //First room on array is starting room
-        pathRooms[0] = rooms[0];                                    //Enter room information for starting room
+        path[0] = Instantiate(prebuiltRooms[0]);                    //First room on array is starting room
+        pathRooms[0] = rooms[0].Copy();                             //Enter room information for starting room
 
         for (int k = 1; k < path.Length - 2; k++)                   //Iterate through path minus starting and ending rooms
         {
             if (currentNumRooms > 0)
             {
                 int randomRoom = (int)Random.Range(0, prebuiltRooms.Length);
+                Room newRoom;
+                GameObject temp;
                 if (k % 2 == 1)
                 {
-                    while (!rooms[randomRoom].isHallway || !checkRoomConnect(pathRooms[k-1],rooms[randomRoom]))    //Change room type until compatible hallway
+                    newRoom = rooms[randomRoom].Copy();
+                    while (!rooms[randomRoom].isHallway || !checkRoomConnect(pathRooms[k - 1], newRoom))
+                    {    //Change room type until compatible hallway
                         randomRoom = (int)Random.Range(0, prebuiltRooms.Length);
-                    path[k] = prebuiltRooms[randomRoom];    //Change for map seeding?
-                    pathRooms[k] = rooms[randomRoom];
-                    connectRooms(pathRooms[k-1],pathRooms[k]);
-                    currentNumRooms = currentNumRooms - rooms[randomRoom].exits;
+                        newRoom = rooms[randomRoom].Copy();
+                    }
+                    pathRooms[k] = newRoom;
+                    path[k] = connectRooms(pathRooms[k - 1], pathRooms[k], Instantiate(prebuiltRooms[randomRoom]));    //Change for map seeding?
+                    currentNumRooms = currentNumRooms - newRoom.exits;
                 }
                 else
                 {
-                    while (rooms[randomRoom].isHallway || rooms[randomRoom].exits < 2 || !checkRoomConnect(pathRooms[k-1], rooms[randomRoom]))      //For rooms
+                    newRoom = rooms[randomRoom].Copy();
+                    while (rooms[randomRoom].isHallway || rooms[randomRoom].exits < 2 || !checkRoomConnect(pathRooms[k - 1], newRoom))
+                    {      //Change room type until compatible room
                         randomRoom = (int)Random.Range(0, prebuiltRooms.Length);
-                    path[k] = prebuiltRooms[randomRoom];    //Change for map seeding?
-                    pathRooms[k] = rooms[randomRoom];
-                    connectRooms(pathRooms[k - 1], pathRooms[k]);
-                    currentNumRooms = currentNumRooms - rooms[randomRoom].exits;
+                        newRoom = rooms[randomRoom].Copy();
+                    }
+                    pathRooms[k] = newRoom;
+                    path[k] = connectRooms(pathRooms[k - 1], pathRooms[k], Instantiate(prebuiltRooms[randomRoom]));    //Change for map seeding?
+                    currentNumRooms = currentNumRooms - newRoom.exits;
                 }
                 essentialPathLength = k;
             }
@@ -130,69 +159,82 @@ public class MapCreator : MonoBehaviour
             return false;
     }
 
-    bool connectRooms(Room first, Room second)         //Connect the rooms together 
+    GameObject connectRooms(Room first, Room second, GameObject secondObject)         //Connect the rooms together 
     {
+        float difference;
         if (first.numLeftDoors > 0 && second.numRightDoors > 0)
         {
-            for(int i = 0; i<first.leftRooms.Length-1; i++)
+            for(int i = 0; i<first.leftRooms.Length; i++)
             {
-                for (int k = 0; k < first.rightRooms.Length-1; k++)
+                for (int k = 0; k < first.rightRooms.Length; k++)
                 {
-                    if (first.leftRooms[i] == null && second.rightRooms[k] == null)
+                    if (first.leftRooms[i] == null && second.rightRooms[k] == null && i < first.numLeftDoors && k < second.numRightDoors)
                     {
                         first.leftRooms[i] = second;
                         second.rightRooms[k] = first;
-                        return true;
+                        difference = secondObject.transform.position.x - second.rightDoors[i].position.x;
+                        secondObject.transform.position = new Vector3(first.leftDoors[i].position.x + difference, first.leftDoors[i].position.y, first.leftDoors[i].position.z);
+                        secondObject.transform.position = first.downDoors[i].position;
+                        return secondObject;
                     }
                 }
             }
         }
         if (first.numRightDoors > 0 && second.numLeftDoors > 0)
         {
-            for (int i = 0; i < first.rightRooms.Length - 1; i++)
+            for (int i = 0; i < first.rightRooms.Length; i++)
             {
-                for (int k = 0; k < first.leftRooms.Length - 1; k++)
+                for (int k = 0; k < first.leftRooms.Length; k++)
                 {
-                    if (first.rightRooms[i] == null && second.leftRooms[k] == null)
+                    if (first.rightRooms[i] == null && second.leftRooms[k] == null && i < first.numRightDoors && k < second.numLeftDoors)
                     {
                         first.rightRooms[i] = second;
                         second.leftRooms[k] = first;
-                        return true;
+                        difference = secondObject.transform.position.x - second.leftDoors[i].position.x;
+                        secondObject.transform.position = new Vector3(first.rightDoors[i].position.x + difference, first.rightDoors[i].position.y, first.rightDoors[i].position.z);
+                        secondObject.transform.position = first.downDoors[i].position;
+                        return secondObject;
                     }
                 }
             }
         }
         if (first.numUpDoors > 0 && second.numDownDoors > 0)
         {
-            for (int i = 0; i < first.upRooms.Length - 1; i++)
+            for (int i = 0; i < first.upRooms.Length; i++)
             {
-                for (int k = 0; k < first.downRooms.Length - 1; k++)
+                for (int k = 0; k < first.downRooms.Length; k++)
                 {
-                    if (first.upRooms[i] == null && second.downRooms[k] == null)
+                    if (first.upRooms[i] == null && second.downRooms[k] == null && i < first.numUpDoors && k < second.numDownDoors)
                     {
                         first.upRooms[i] = second;
                         second.downRooms[k] = first;
-                        return true;
+                        difference = secondObject.transform.position.y - second.downDoors[i].position.y;
+                        secondObject.transform.position =  new Vector3(first.upDoors[i].position.x, first.upDoors[i].position.y + difference, first.upDoors[i].position.z);
+                        secondObject.transform.position = first.downDoors[i].position;
+                        return secondObject;
                     }
                 }
             }
         }
         if (first.numDownDoors > 0 && second.numUpDoors > 0)
         {
-            for (int i = 0; i < first.downRooms.Length - 1; i++)
+            for (int i = 0; i < first.downRooms.Length; i++)
             {
-                for (int k = 0; k < first.upDoors.Length - 1; k++)
+                for (int k = 0; k < first.upDoors.Length; k++)
                 {
-                    if (first.downRooms[i] == null && second.upRooms[k] == null)
+                    if (first.downRooms[i] == null && second.upRooms[k] == null && i < first.numDownDoors && k < second.numUpDoors)
                     {
                         first.downRooms[i] = second;
                         second.upRooms[k] = first;
-                        return true;
+                        difference = secondObject.transform.position.y - second.upDoors[i].position.y;
+                        secondObject.transform.position = new Vector3(first.downDoors[i].position.x, first.downDoors[i].position.y + difference, first.downDoors[i].position.z);
+                        secondObject.transform.position = first.downDoors[i].position;
+                        return secondObject;
                     }
                 }
             }
         }
 
-        return false;
+        return null;
     }
 }
