@@ -220,4 +220,27 @@ public class MapBuilder : MonoBehaviour {
             }
         }
     }
+
+    bool roomIntersect(Room first, Room second)
+    {
+        float leftPosF = first.roomObject.transform.Find("leftmost wall").position.x;
+        float rightPosF = first.roomObject.transform.Find("rightmost wall").position.x;
+        float downPosF = first.roomObject.transform.Find("downmost wall").position.y;
+        float upPosF = first.roomObject.transform.Find("upmost wall").position.y;
+        float leftPosS = second.roomObject.transform.Find("leftmost wall").position.x;
+        float rightPosS = second.roomObject.transform.Find("rightmost wall").position.x;
+        float downPosS = second.roomObject.transform.Find("downmost wall").position.y;
+        float upPosS = second.roomObject.transform.Find("upmost wall").position.y;
+
+        if (leftPosF > leftPosS && leftPosF < rightPosS && upPosF < upPosS && upPosF > downPosS)
+            return true;
+        if (leftPosF > leftPosS && leftPosF < rightPosS && downPosF < upPosS && downPosF > downPosS)
+            return true;
+        if (rightPosF > leftPosS && rightPosF < rightPosS && upPosF < upPosS && upPosF > downPosS)
+            return true;
+        if (rightPosF > leftPosS && rightPosF < rightPosS && downPosF < upPosS && downPosF > downPosS)
+            return true;
+
+        return false;
+    }
 }
