@@ -27,21 +27,24 @@ public class MapBuilder : MonoBehaviour {
     }
 
     public GameObject[] prebuiltRooms;
-    private Room[] rooms;
+    private Room[] roomInfo;
+    private Room[] allRooms;
     public int numRooms;
+    public int initialNumRooms;
 
     // Use this for initialization
     void Start () {
-        rooms = new Room[prebuiltRooms.Length];
-        for(int i = 0; i < rooms.Length; i++)
+        roomInfo = new Room[prebuiltRooms.Length];
+        allRooms = new Room[numRooms];
+        for(int i = 0; i < roomInfo.Length; i++)
         {
-            rooms[i] = new Room();
+            roomInfo[i] = new Room();
         }
         if (numRooms > 1)
         {
             for (int i = 0; i < prebuiltRooms.Length; i++)
             {
-                rooms[i].roomObject = prebuiltRooms[i];
+                roomInfo[i].roomObject = prebuiltRooms[i];
             }
         }
         FindEssentialPath(0);
@@ -80,40 +83,64 @@ public class MapBuilder : MonoBehaviour {
                     numRightDoors++;
                 }
             }
-            rooms[i].isHallway = (prebuiltRooms[i].tag == "Hallway") ? true : false;
-            rooms[i].leftRooms = new Room[numLeftDoors];
-            rooms[i].rightRooms = new Room[numRightDoors];
-            rooms[i].downRooms = new Room[numDownDoors];
-            rooms[i].upRooms = new Room[numUpDoors];
+            roomInfo[i].isHallway = (prebuiltRooms[i].tag == "Hallway") ? true : false;
+            roomInfo[i].leftRooms = new Room[numLeftDoors];
+            roomInfo[i].rightRooms = new Room[numRightDoors];
+            roomInfo[i].downRooms = new Room[numDownDoors];
+            roomInfo[i].upRooms = new Room[numUpDoors];
         }
 
         int essentialPathLength = numRooms / 4 * 3;
         path = new Room[essentialPathLength];
-        path[0] = rooms[start].Copy();
+        path[0] = roomInfo[start].Copy();
+        allRooms[0] = path[0];
 
         for (int i = 1; i < essentialPathLength; i++)
         {
-            int random = (int)Random.Range(0, prebuiltRooms.Length);
-            Room newRoom = rooms[random].Copy();
+            int random = (int)Random.Range(0, initialNumRooms);
+            Room newRoom = roomInfo[random].Copy();
             if (i % 2 == 1)
             {
-                while (checkRoomExits(newRoom) < 2 || !newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom))     //If room is a hallway and can connect to the old room and has more than 2 exits
+                int x = 0;
+                while (x++ < 25 && (checkRoomExits(newRoom) < 2 || !newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))     //If room is a hallway and can connect to the old room and has more than 2 exits
                 {
                     Destroy(newRoom.roomObject);
                     random = (int)Random.Range(0, prebuiltRooms.Length);
-                    newRoom = rooms[random].Copy();
+                    newRoom = roomInfo[random].Copy();
                 }
-                path[i] = newRoom;
+                if (x >= 25)
+                {
+                    i--;
+                    Destroy(path[i].roomObject);
+                    path[i] = null;
+                    allRooms[i] = null;
+                }
+                else
+                {
+                    path[i] = newRoom;
+                    allRooms[i] = newRoom;
+                }
             }
             else
             {
-                while (checkRoomExits(newRoom) < 2 || newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom))   //If a room is a room and can connect to the old room and has more than 2 exits
+                int x = 0;
+                while (x++ < 25 && (checkRoomExits(newRoom) < 2 || newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))   //If a room is a room and can connect to the old room and has more than 2 exits
                 {
                     Destroy(newRoom.roomObject);
                     random = (int)Random.Range(0, prebuiltRooms.Length);
-                    newRoom = rooms[random].Copy();
+                    newRoom = roomInfo[random].Copy();
                 }
-                path[i] = newRoom;
+                if (x >= 25)
+                {
+                    i--;
+                    Destroy(path[i].roomObject);
+                    path[i] = null;
+                    allRooms[i] = null;
+                }
+                else { 
+                    path[i] = newRoom;
+                    allRooms[i] = newRoom;
+                }
             }
             //Instantiate(path[i].roomObject);
         }
@@ -223,6 +250,7 @@ public class MapBuilder : MonoBehaviour {
 
     bool roomIntersect(Room first, Room second)
     {
+
         float leftPosF = first.roomObject.transform.Find("leftmost wall").position.x;
         float rightPosF = first.roomObject.transform.Find("rightmost wall").position.x;
         float downPosF = first.roomObject.transform.Find("downmost wall").position.y;
@@ -233,13 +261,72 @@ public class MapBuilder : MonoBehaviour {
         float upPosS = second.roomObject.transform.Find("upmost wall").position.y;
 
         if (leftPosF > leftPosS && leftPosF < rightPosS && upPosF < upPosS && upPosF > downPosS)
+        {
+            print("left up");
             return true;
+        }
         if (leftPosF > leftPosS && leftPosF < rightPosS && downPosF < upPosS && downPosF > downPosS)
+        {
+            print("left down");
             return true;
+        }
         if (rightPosF > leftPosS && rightPosF < rightPosS && upPosF < upPosS && upPosF > downPosS)
+        {
+            print("right up");
             return true;
+        }
         if (rightPosF > leftPosS && rightPosF < rightPosS && downPosF < upPosS && downPosF > downPosS)
+        {
+            print("right down");
             return true;
+        }
+
+        return false;
+    }
+
+    bool roomIntersect(Room first, int arrayNum)
+    {
+        Room second;
+        int offset = 2;
+
+        float leftPosF = first.roomObject.transform.Find("leftmost wall").position.x;
+        float rightPosF = first.roomObject.transform.Find("rightmost wall").position.x;
+        float downPosF = first.roomObject.transform.Find("downmost wall").position.y;
+        float upPosF = first.roomObject.transform.Find("upmost wall").position.y;
+        float leftPosS, rightPosS, downPosS, upPosS;
+
+        for (int i = 0; i < allRooms.Length; i++) {
+            if (allRooms[i] != null && i != arrayNum - 1) {
+                second = allRooms[i];
+                leftPosS = second.roomObject.transform.Find("leftmost wall").position.x;
+                rightPosS = second.roomObject.transform.Find("rightmost wall").position.x;
+                downPosS = second.roomObject.transform.Find("downmost wall").position.y;
+                upPosS = second.roomObject.transform.Find("upmost wall").position.y;
+
+                if (leftPosF + offset > leftPosS && leftPosF + offset < rightPosS && upPosF - offset < upPosS && upPosF - offset > downPosS)
+                {
+                    print("left up");
+                    return true;
+                }
+                if (leftPosF + offset > leftPosS && leftPosF + offset < rightPosS && downPosF + offset < upPosS && downPosF + offset > downPosS)
+                {
+                    print("left down");
+                    return true;
+                }
+                if (rightPosF - offset > leftPosS && rightPosF - offset < rightPosS && upPosF - offset < upPosS && upPosF - offset > downPosS)
+                {
+                    print("right up");
+                    return true;
+                }
+                if (rightPosF - offset > leftPosS && rightPosF - offset < rightPosS && downPosF + offset < upPosS && downPosF + offset > downPosS)
+                {
+                    print("right down");
+                    return true;
+                }
+            }
+        }
+
+
 
         return false;
     }
