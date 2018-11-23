@@ -93,27 +93,29 @@ public class MapBuilder : MonoBehaviour {
         int essentialPathLength = numRooms / 4 * 3;
         path = new Room[essentialPathLength];
         path[0] = roomInfo[start].Copy();
-        allRooms[0] = path[0];
+        allRooms[0] = path[start];
 
         for (int i = 1; i < essentialPathLength; i++)
         {
             int random = (int)Random.Range(0, initialNumRooms);
+            print(random);
             Room newRoom = roomInfo[random].Copy();
             if (i % 2 == 1)
             {
                 int x = 0;
-                while (x++ < 25 && (checkRoomExits(newRoom) < 2 || !newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))     //If room is a hallway and can connect to the old room and has more than 2 exits
+                while (x++ < 100 && (checkRoomExits(newRoom) < 2|| !newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))     //If room is a hallway and can connect to the old room and has more than 2 exits
                 {
                     Destroy(newRoom.roomObject);
-                    random = (int)Random.Range(0, prebuiltRooms.Length);
+                    random = (int)Random.Range(0, initialNumRooms);
                     newRoom = roomInfo[random].Copy();
                 }
-                if (x >= 25)
+                if (x >= 100 && i>1)
                 {
-                    i--;
-                    Destroy(path[i].roomObject);
-                    path[i] = null;
-                    allRooms[i] = null;
+                    i = i - 2;
+                    deleteReferences(path[i+1]);
+                    Destroy(path[i+1].roomObject);
+                    path[i+1] = null;
+                    allRooms[i+1] = null;
                 }
                 else
                 {
@@ -124,20 +126,22 @@ public class MapBuilder : MonoBehaviour {
             else
             {
                 int x = 0;
-                while (x++ < 25 && (checkRoomExits(newRoom) < 2 || newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))   //If a room is a room and can connect to the old room and has more than 2 exits
+                while (x++ < 100 && (checkRoomExits(newRoom) < 2 || newRoom.isHallway || !checkRoomConnect(path[i - 1], newRoom) || roomIntersect(newRoom, i)))   //If a room is a room and can connect to the old room and has more than 2 exits
                 {
                     Destroy(newRoom.roomObject);
-                    random = (int)Random.Range(0, prebuiltRooms.Length);
+                    random = (int)Random.Range(0, initialNumRooms);
                     newRoom = roomInfo[random].Copy();
                 }
-                if (x >= 25)
+                if (x >= 100 && i>1)
                 {
-                    i--;
-                    Destroy(path[i].roomObject);
-                    path[i] = null;
-                    allRooms[i] = null;
+                    i = i - 2;
+                    deleteReferences(path[i+1]);
+                    Destroy(path[i+1].roomObject);
+                    path[i+1] = null;
+                    allRooms[i+1] = null;
                 }
-                else { 
+                else
+                {
                     path[i] = newRoom;
                     allRooms[i] = newRoom;
                 }
@@ -287,7 +291,7 @@ public class MapBuilder : MonoBehaviour {
     bool roomIntersect(Room first, int arrayNum)
     {
         Room second;
-        int offset = 2;
+        int offset = 1;
 
         float leftPosF = first.roomObject.transform.Find("leftmost wall").position.x;
         float rightPosF = first.roomObject.transform.Find("rightmost wall").position.x;
@@ -325,9 +329,66 @@ public class MapBuilder : MonoBehaviour {
                 }
             }
         }
-
-
-
         return false;
+    }
+
+    void deleteReferences(Room first)
+    {
+        for(int i = 0; i<first.leftRooms.Length; i++)
+        {
+            if(first.leftRooms[i] != null)
+            {
+                for(int k = first.leftRooms[i].rightRooms.Length-1; k>=0; k--)
+                {
+                    if(first.leftRooms[i].rightRooms[k] != null && first.leftRooms[i].rightRooms[k] == first)
+                    {
+                        first.leftRooms[i].rightRooms[k] = null;
+                    }   
+                }
+            }
+        }
+
+        for (int i = 0; i < first.rightRooms.Length; i++)
+        {
+            if (first.rightRooms[i] != null)
+            {
+                for (int k = first.rightRooms[i].leftRooms.Length-1; k >= 0; k--)
+                {
+                    if (first.rightRooms[i].leftRooms[k] != null && first.rightRooms[i].leftRooms[k] == first)
+                    {
+                        first.rightRooms[i].leftRooms[k] = null;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < first.upRooms.Length; i++)
+        {
+            if (first.upRooms[i] != null)
+            {
+                for (int k = first.upRooms[i].downRooms.Length-1; k >= 0; k--)
+                {
+                    if (first.upRooms[i].downRooms[k] != null && first.upRooms[i].downRooms[k] == first)
+                    {
+                        first.upRooms[i].downRooms[k] = null;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < first.downRooms.Length; i++)
+        {
+            if (first.downRooms[i] != null)
+            {
+                for (int k = first.downRooms[i].upRooms.Length-1; k >= 0; k--)
+                {
+                    if (first.downRooms[i].upRooms[k] != null && first.downRooms[i].upRooms[k] == first)
+                    {
+                        first.downRooms[i].upRooms[k] = null;
+                    }
+                }
+            }
+        }
+
     }
 }
