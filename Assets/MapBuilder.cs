@@ -31,6 +31,10 @@ public class MapBuilder : MonoBehaviour
         public float y;
         public bool isHallway;
         public GameObject roomObject;
+        public Room leftRoom;
+        public Room rightRoom;
+        public Room upRoom;
+        public Room downRoom;
 
         /*public Room()
         {
@@ -114,22 +118,24 @@ public class MapBuilder : MonoBehaviour
         allRooms[0] = essentialPath[0];
 
         if (essentialPath[0].door == 8)//up
-            checkRoom(0, 1, essentialPathLength-1);
+            checkRoom(0, 1, essentialPathLength - 1,4);
         else if (essentialPath[0].door == 4)//down
-            checkRoom(0, -1, essentialPathLength-1);
+            checkRoom(0, -1, essentialPathLength - 1,8);
         else if (essentialPath[0].door == 2)//left
-            checkRoom(-1, 0, essentialPathLength-1);
+            checkRoom(-1, 0, essentialPathLength - 1,1);
         else if (essentialPath[0].door == 1)//right
-            checkRoom(1, 0, essentialPathLength-1);
+            checkRoom(1, 0, essentialPathLength - 1,2);
 
         return;
     }
 
-    bool checkRoom(int x, int y, int remainingLength)
+    bool checkRoom(int x, int y, int remainingLength, int needDoor)//this should probably be called create essential path recursive cause it does more than check/place 1 room
     {
         if (remainingLength <= 0)
         {
-            return true;
+            if (allRooms[essentialPathLength] != null)
+                return true;
+            return false;
         }
 
         int[] possibleRooms = new int[16];
@@ -141,23 +147,28 @@ public class MapBuilder : MonoBehaviour
             {
                 if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up
                 {
-                    numPossibleRooms = numPossibleRooms & 7;
+                    if ((allRooms[i].door & 4) != 4)             //if there isn't a down door for the room above, disable the up door
+                        numPossibleRooms = numPossibleRooms & 7;
                 }
                 if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down
                 {
-                    numPossibleRooms = numPossibleRooms & 11;
+                    if ((allRooms[i].door & 8) != 8)
+                        numPossibleRooms = numPossibleRooms & 11;
                 }
                 if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left
                 {
-                    numPossibleRooms = numPossibleRooms & 13;
+                    if ((allRooms[i].door & 1) != 1)
+                        numPossibleRooms = numPossibleRooms & 13;
                 }
                 if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right if there is a room to the right
                 {
-                    numPossibleRooms = numPossibleRooms & 14;
+                    if ((allRooms[i].door & 2) != 2)
+                        numPossibleRooms = numPossibleRooms & 14;
                 }
             }
         }
 
+        //numPossibleRooms = numPossibleRooms | needDoor;
         int temp = 0;
         for (int i = 0; i < 16; i++)         //get an array of all possible permutations of the given room exits
         {
@@ -173,63 +184,88 @@ public class MapBuilder : MonoBehaviour
 
         int rand = Random.Range(0, 16);
         int dontInfLoop = 0;
-        while (possibleRooms[rand] == 0 && dontInfLoop < 100)
+        while ((possibleRooms[rand] == 0 || possibleRooms[rand] == 8 || possibleRooms[rand] == 4 || possibleRooms[rand] == 2 || possibleRooms[rand] == 1) && dontInfLoop < 100)//get a random room from the list of possible rooms
         {
             rand = Random.Range(0, 16);
             dontInfLoop++;
         }
+        rand = rand | needDoor;
+
         GameObject tempRoom = null;
         int[] randList = new int[] { 1, 2, 4, 8 };
-        int direction = randList[Random.Range(0,randList.Length)];
+        int direction = randList[Random.Range(0, randList.Length)];
         dontInfLoop = 0;
-        while((direction & numPossibleRooms) != direction && dontInfLoop < 100)
+        while (((direction & numPossibleRooms) != direction || direction == needDoor || ((possibleRooms[rand] & direction) != direction)) && dontInfLoop < 100)//get a random direction from the four cardinal directions
         {
             direction = randList[Random.Range(0, randList.Length)];
             dontInfLoop++;
         }
 
-        if ((possibleRooms[rand] & direction) == direction)//create room
+        for (int k = 0; k < rooms.Length; k++)         //find the room with the corresponding room exits and slap it in there
         {
-            for (int k = 0; k < rooms.Length; k++)
+            if (rooms[k].door == possibleRooms[rand])
             {
-                if (rooms[k].door == numPossibleRooms)
+                allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                k = 9999;
+            }
+        }
+        if (allRooms[essentialPath.Length - remainingLength] == null)   //if the room type doesn't exist then make the first room in the array
+        {
+            Room aaa = rooms[0].Copy();
+            aaa.roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+
+        }
+
+        if ((possibleRooms[rand] & direction) == direction)//if the room and direction are possible in that room i.e. UDR can go down but can't go left
+        {
+            if (direction == 8)     //if we're going up create the room with y = y+1;
+            {
+                if (checkRoom(x, y + 1, remainingLength - 1,4))
                 {
-                    allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
-                    tempRoom = Instantiate(prebuiltRooms[k], new Vector3(x * 20.6f, y * 20.6f, 0), Quaternion.identity);
+                    allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
+                    return true;
                 }
+                else
+                    Destroy(tempRoom);
             }
-            if (allRooms[essentialPath.Length - remainingLength] == null)
+            else if (direction == 4)//down
             {
-                Room aaa = new Room();
-                aaa.door = numPossibleRooms;
-                aaa.isHallway = false;
-                aaa.roomObject = Instantiate(prebuiltRooms[0], new Vector3(x * 20.6f, y * 20.6f, 0), Quaternion.identity);
-
-            }
-
-            if (direction == 8)
-            {
-                if (checkRoom(x, y + 1, remainingLength - 1))
+                if (checkRoom(x, y - 1, remainingLength - 1,8))
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
                     return true;
-            }
-            else if (direction == 4)
-            {
-                if (checkRoom(x, y - 1, remainingLength - 1))
-                    return true;
+                }
+                else
+                    Destroy(tempRoom);
             }
 
-            else if (direction == 2)
+            else if (direction == 2)//left
             {
-                if (checkRoom(x - 1, y, remainingLength - 1))
+                if (checkRoom(x - 1, y, remainingLength - 1,1))
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
                     return true;
+                }
+                else
+                    Destroy(tempRoom);
             }
 
-            else if (direction == 1)
+            else if (direction == 1)//right
             {
-                if (checkRoom(x + 1, y, remainingLength - 1))
+                if (checkRoom(x + 1, y, remainingLength - 1,2))
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
                     return true;
+                }
+                else
+                    Destroy(tempRoom);
             }
-            else
+            else                    //destroy the room if no upcoming room was placed
             {
                 Destroy(tempRoom);
                 allRooms[essentialPath.Length - remainingLength] = null;
