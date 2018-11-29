@@ -131,9 +131,15 @@ public class MapBuilder : MonoBehaviour
 
     bool checkRoom(int x, int y, int remainingLength, int needDoor)//this should probably be called create essential path recursive cause it does more than check/place 1 room
     {
+        for (int i = 0; i < allRooms.Length; i++)
+        {
+            if (allRooms[i] != null && allRooms[i].x == x && allRooms[i].y == y)
+                return false;
+        }
+
         if (remainingLength <= 0)
         {
-            if (allRooms[essentialPathLength] != null)
+            if (allRooms[essentialPathLength-1] != null)
                 return true;
             return false;
         }
@@ -141,13 +147,13 @@ public class MapBuilder : MonoBehaviour
         int[] possibleRooms = new int[16];
         int numPossibleRooms = 15;
 
-        for (int i = 0; i < allRooms.Length; i++)
+        for (int i = 0; i < allRooms.Length; i++)//Dont use rooms that try to open into another room without a corresponding door i.e. Room R and cant be put on the left of Room UD
         {
             if (allRooms[i] != null)
             {
                 if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up
                 {
-                    if ((allRooms[i].door & 4) != 4)             //if there isn't a down door for the room above, disable the up door
+                    if((allRooms[i].door & 4) != 4)
                         numPossibleRooms = numPossibleRooms & 7;
                 }
                 if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down
@@ -168,7 +174,7 @@ public class MapBuilder : MonoBehaviour
             }
         }
 
-        //numPossibleRooms = numPossibleRooms | needDoor;
+        numPossibleRooms = numPossibleRooms | needDoor;//Add back the room that you came from into the possible rooms to choose
         int temp = 0;
         for (int i = 0; i < 16; i++)         //get an array of all possible permutations of the given room exits
         {
@@ -207,13 +213,19 @@ public class MapBuilder : MonoBehaviour
             {
                 allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                 allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                allRooms[essentialPath.Length - remainingLength].x = x;
+                allRooms[essentialPath.Length - remainingLength].y = y;
                 k = 9999;
             }
         }
         if (allRooms[essentialPath.Length - remainingLength] == null)   //if the room type doesn't exist then make the first room in the array
         {
-            Room aaa = rooms[0].Copy();
-            aaa.roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+            allRooms[essentialPath.Length - remainingLength] = rooms[0].Copy();
+            allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+            allRooms[essentialPath.Length - remainingLength].x = x;
+            allRooms[essentialPath.Length - remainingLength].y = y;
+            //Room aaa = rooms[0].Copy();
+            //aaa.roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
 
         }
 
@@ -270,6 +282,11 @@ public class MapBuilder : MonoBehaviour
                 Destroy(tempRoom);
                 allRooms[essentialPath.Length - remainingLength] = null;
             }
+        }
+
+        if(allRooms[essentialPathLength-remainingLength] == null)
+        {
+
         }
 
         return false;
