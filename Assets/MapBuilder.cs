@@ -153,23 +153,31 @@ public class MapBuilder : MonoBehaviour
             {
                 if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up
                 {
-                    if((allRooms[i].door & 4) != 4)
+                    if ((allRooms[i].door & 4) != 4)
                         numPossibleRooms = numPossibleRooms & 7;
+                    else
+                        needDoor = needDoor | 8;
                 }
                 if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down
                 {
                     if ((allRooms[i].door & 8) != 8)
                         numPossibleRooms = numPossibleRooms & 11;
+                    else
+                        needDoor = needDoor | 4;
                 }
                 if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left
                 {
                     if ((allRooms[i].door & 1) != 1)
                         numPossibleRooms = numPossibleRooms & 13;
+                    else
+                        needDoor = needDoor | 2;
                 }
                 if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right if there is a room to the right
                 {
                     if ((allRooms[i].door & 2) != 2)
                         numPossibleRooms = numPossibleRooms & 14;
+                    else
+                        needDoor = needDoor | 1;
                 }
             }
         }
