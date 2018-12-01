@@ -151,28 +151,28 @@ public class MapBuilder : MonoBehaviour
         {
             if (allRooms[i] != null)
             {
-                if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up
+                if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up door if there isn't a corresponding door, else enable up door
                 {
                     if ((allRooms[i].door & 4) != 4)
                         numPossibleRooms = numPossibleRooms & 7;
                     else
                         needDoor = needDoor | 8;
                 }
-                if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down
+                if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down...
                 {
                     if ((allRooms[i].door & 8) != 8)
                         numPossibleRooms = numPossibleRooms & 11;
                     else
                         needDoor = needDoor | 4;
                 }
-                if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left
+                if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left...
                 {
                     if ((allRooms[i].door & 1) != 1)
                         numPossibleRooms = numPossibleRooms & 13;
                     else
                         needDoor = needDoor | 2;
                 }
-                if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right if there is a room to the right
+                if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right...
                 {
                     if ((allRooms[i].door & 2) != 2)
                         numPossibleRooms = numPossibleRooms & 14;
@@ -248,7 +248,10 @@ public class MapBuilder : MonoBehaviour
                     return true;
                 }
                 else
+                {
                     Destroy(tempRoom);
+                    allRooms[essentialPath.Length - remainingLength] = null;
+                }
             }
             else if (direction == 4)//down
             {
@@ -259,7 +262,10 @@ public class MapBuilder : MonoBehaviour
                     return true;
                 }
                 else
+                {
                     Destroy(tempRoom);
+                    allRooms[essentialPath.Length - remainingLength] = null;
+                }
             }
 
             else if (direction == 2)//left
@@ -271,19 +277,25 @@ public class MapBuilder : MonoBehaviour
                     return true;
                 }
                 else
+                {
                     Destroy(tempRoom);
+                    allRooms[essentialPath.Length - remainingLength] = null;
+                }
             }
 
             else if (direction == 1)//right
             {
-                if (checkRoom(x + 1, y, remainingLength - 1,2))
+                if (checkRoom(x + 1, y, remainingLength - 1, 2))
                 {
                     allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
                     return true;
                 }
                 else
+                {
                     Destroy(tempRoom);
+                    allRooms[essentialPath.Length - remainingLength] = null;
+                }
             }
             else                    //destroy the room if no upcoming room was placed
             {
@@ -294,9 +306,38 @@ public class MapBuilder : MonoBehaviour
 
         if(allRooms[essentialPathLength-remainingLength] == null)
         {
-
+            for (int k = 0; k < rooms.Length; k++)         //find the room with the max exits and slap it in there
+            {
+                if (rooms[k].door == numPossibleRooms)
+                {
+                    if (checkRoom(x, y + 1, remainingLength - 1, 4)) //try up room
+                    {
+                        allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
+                        allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        return true;
+                    }
+                    if (checkRoom(x, y - 1, remainingLength - 1, 8)) //try down
+                    {
+                        allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
+                        allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        return true;
+                    }
+                    if (checkRoom(x - 1, y, remainingLength - 1, 1)) //try left
+                    {
+                        allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
+                        allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        return true;
+                    }
+                    if (checkRoom(x + 1, y, remainingLength - 1, 2)) //try right
+                    {
+                        allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
+                        allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        return true;
+                    }
+                }
+            }
         }
 
-        return false;
+        return false; //If everything fails to make a room then this recursive path doesn't work
     }
 }
