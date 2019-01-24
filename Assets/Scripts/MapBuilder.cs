@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class MapBuilder : MonoBehaviour
 {
-
+    public const int UP = 8;
+    public const int DOWN = 4;
+    public const int LEFT = 2;
+    public const int RIGHT = 1;
     /* Door Codes
      *     UDLR
      * 0 - 0000 None
@@ -78,19 +81,19 @@ public class MapBuilder : MonoBehaviour
             {
                 if (child.tag == "Up Door")
                 {
-                    rooms[i].door = rooms[i].door | 8;
+                    rooms[i].door = rooms[i].door | UP;
                 }
                 if (child.tag == "Down Door")
                 {
-                    rooms[i].door = rooms[i].door | 4;
+                    rooms[i].door = rooms[i].door | DOWN;
                 }
                 if (child.tag == "Left Door")
                 {
-                    rooms[i].door = rooms[i].door | 2;
+                    rooms[i].door = rooms[i].door | LEFT;
                 }
                 if (child.tag == "Right Door")
                 {
-                    rooms[i].door = rooms[i].door | 1;
+                    rooms[i].door = rooms[i].door | RIGHT;
                 }
             }
             rooms[i].isHallway = (prebuiltRooms[i].tag == "Hallway") ? true : false;
@@ -117,14 +120,16 @@ public class MapBuilder : MonoBehaviour
         essentialPath[0] = rooms[startingRoom].Copy();
         allRooms[0] = essentialPath[0];
 
-        if (essentialPath[0].door == 8)//up
-            checkRoom(0, 1, essentialPathLength - 1,4);
-        else if (essentialPath[0].door == 4)//down
-            checkRoom(0, -1, essentialPathLength - 1,8);
-        else if (essentialPath[0].door == 2)//left
-            checkRoom(-1, 0, essentialPathLength - 1,1);
+        if (essentialPath[0].door == UP)//up
+            checkRoom(0, 1, essentialPathLength - 1, DOWN);
+        else if (essentialPath[0].door == DOWN)//down
+            checkRoom(0, -1, essentialPathLength - 1,UP);
+        else if (essentialPath[0].door == LEFT)//left
+            checkRoom(-1, 0, essentialPathLength - 1, RIGHT);
         else if (essentialPath[0].door == 1)//right
-            checkRoom(1, 0, essentialPathLength - 1,2);
+            checkRoom(1, 0, essentialPathLength - 1, LEFT);
+
+        //finishPaths();
 
         return;
     }
@@ -144,6 +149,7 @@ public class MapBuilder : MonoBehaviour
             return false;
         }
 
+        int cameFrom = needDoor;        //Door that you came from
         int[] possibleRooms = new int[16];
         int numPossibleRooms = 15;
 
@@ -153,31 +159,31 @@ public class MapBuilder : MonoBehaviour
             {
                 if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up door if there isn't a corresponding door, else enable up door
                 {
-                    if ((allRooms[i].door & 4) != 4)
+                    if ((allRooms[i].door & DOWN) != DOWN)
                         numPossibleRooms = numPossibleRooms & 7;
                     else
-                        needDoor = needDoor | 8;
+                        needDoor = needDoor | UP;
                 }
                 if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down...
                 {
-                    if ((allRooms[i].door & 8) != 8)
+                    if ((allRooms[i].door & UP) != UP)
                         numPossibleRooms = numPossibleRooms & 11;
                     else
-                        needDoor = needDoor | 4;
+                        needDoor = needDoor | DOWN;
                 }
                 if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left...
                 {
                     if ((allRooms[i].door & 1) != 1)
                         numPossibleRooms = numPossibleRooms & 13;
                     else
-                        needDoor = needDoor | 2;
+                        needDoor = needDoor | LEFT;
                 }
                 if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right...
                 {
-                    if ((allRooms[i].door & 2) != 2)
+                    if ((allRooms[i].door & LEFT) != LEFT)
                         numPossibleRooms = numPossibleRooms & 14;
                     else
-                        needDoor = needDoor | 1;
+                        needDoor = needDoor | RIGHT;
                 }
             }
         }
@@ -198,7 +204,7 @@ public class MapBuilder : MonoBehaviour
 
         int rand = Random.Range(0, 16);
         int dontInfLoop = 0;
-        while ((possibleRooms[rand] == 0 || possibleRooms[rand] == 8 || possibleRooms[rand] == 4 || possibleRooms[rand] == 2 || possibleRooms[rand] == 1) && dontInfLoop < 100)//get a random room from the list of possible rooms
+        while ((possibleRooms[rand] == 0 || possibleRooms[rand] == UP || possibleRooms[rand] == DOWN || possibleRooms[rand] == LEFT || possibleRooms[rand] == 1) && dontInfLoop < 100)//get a random room from the list of possible rooms
         {
             rand = Random.Range(0, 16);
             dontInfLoop++;
@@ -206,7 +212,7 @@ public class MapBuilder : MonoBehaviour
         rand = rand | needDoor;
 
         GameObject tempRoom = null;
-        int[] randList = new int[] { 1, 2, 4, 8 };
+        int[] randList = new int[] { RIGHT, LEFT, DOWN, UP };
         int direction = randList[Random.Range(0, randList.Length)];
         dontInfLoop = 0;
         while (((direction & numPossibleRooms) != direction || direction == needDoor || ((possibleRooms[rand] & direction) != direction)) && dontInfLoop < 100)//get a random direction from the four cardinal directions
@@ -221,6 +227,29 @@ public class MapBuilder : MonoBehaviour
             {
                 allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                 allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                if(cameFrom == UP)
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
+                }
+
+                else if (cameFrom == DOWN)
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
+                }
+
+                else if (cameFrom == LEFT)
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
+                }
+
+                else if (cameFrom == RIGHT)
+                {
+                    allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
+                    allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
+                }
                 allRooms[essentialPath.Length - remainingLength].x = x;
                 allRooms[essentialPath.Length - remainingLength].y = y;
                 k = 9999;
@@ -239,9 +268,9 @@ public class MapBuilder : MonoBehaviour
 
         if ((possibleRooms[rand] & direction) == direction)//if the room and direction are possible in that room i.e. UDR can go down but can't go left
         {
-            if (direction == 8)     //if we're going up create the room with y = y+1;
+            if (direction == UP)     //if we're going up create the room with y = y+1;
             {
-                if (checkRoom(x, y + 1, remainingLength - 1,4))
+                if (checkRoom(x, y + 1, remainingLength - 1, DOWN))
                 {
                     allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -249,13 +278,14 @@ public class MapBuilder : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(tempRoom);
+                    if (allRooms[essentialPathLength - remainingLength] != null)
+                        Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
                     allRooms[essentialPath.Length - remainingLength] = null;
                 }
             }
-            else if (direction == 4)//down
+            else if (direction == DOWN)//down
             {
-                if (checkRoom(x, y - 1, remainingLength - 1,8))
+                if (checkRoom(x, y - 1, remainingLength - 1,UP))
                 {
                     allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -263,14 +293,15 @@ public class MapBuilder : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(tempRoom);
+                    if (allRooms[essentialPathLength - remainingLength] != null)
+                        Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
                     allRooms[essentialPath.Length - remainingLength] = null;
                 }
             }
 
-            else if (direction == 2)//left
+            else if (direction == LEFT)//left
             {
-                if (checkRoom(x - 1, y, remainingLength - 1,1))
+                if (checkRoom(x - 1, y, remainingLength - 1,RIGHT))
                 {
                     allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -278,14 +309,15 @@ public class MapBuilder : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(tempRoom);
+                    if (allRooms[essentialPathLength - remainingLength] != null)
+                        Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
                     allRooms[essentialPath.Length - remainingLength] = null;
                 }
             }
 
-            else if (direction == 1)//right
+            else if (direction == RIGHT)//right
             {
-                if (checkRoom(x + 1, y, remainingLength - 1, 2))
+                if (checkRoom(x + 1, y, remainingLength - 1, LEFT))
                 {
                     allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -299,7 +331,8 @@ public class MapBuilder : MonoBehaviour
             }
             else                    //destroy the room if no upcoming room was placed
             {
-                Destroy(tempRoom);
+                if (allRooms[essentialPathLength - remainingLength] != null)
+                    Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
                 allRooms[essentialPath.Length - remainingLength] = null;
             }
         }
@@ -310,29 +343,52 @@ public class MapBuilder : MonoBehaviour
             {
                 if (rooms[k].door == numPossibleRooms)
                 {
-                    if (checkRoom(x, y + 1, remainingLength - 1, 4)) //try up room
+                    if ((numPossibleRooms & UP) == UP && cameFrom != UP && checkRoom(x, y + 1, remainingLength - 1, DOWN)) //try up room
                     {
+                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        allRooms[essentialPath.Length - remainingLength].x = x;
+                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
-                    if (checkRoom(x, y - 1, remainingLength - 1, 8)) //try down
+                    else if ((numPossibleRooms & DOWN) == DOWN && cameFrom != DOWN && checkRoom(x, y - 1, remainingLength - 1, UP)) //try down
                     {
+                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        allRooms[essentialPath.Length - remainingLength].x = x;
+                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
-                    if (checkRoom(x - 1, y, remainingLength - 1, 1)) //try left
+                    else if ((numPossibleRooms & LEFT) == LEFT && cameFrom != LEFT && checkRoom(x - 1, y, remainingLength - 1, RIGHT)) //try left
                     {
+                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        allRooms[essentialPath.Length - remainingLength].x = x;
+                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
-                    if (checkRoom(x + 1, y, remainingLength - 1, 2)) //try right
+                    else if ((numPossibleRooms & RIGHT) == RIGHT && cameFrom != RIGHT && checkRoom(x + 1, y, remainingLength - 1, LEFT)) //try right
                     {
+                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
+                        allRooms[essentialPath.Length - remainingLength].x = x;
+                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
+                    }
+                    else
+                    {
+                        if(allRooms[essentialPathLength - remainingLength] != null)
+                            Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
+                        allRooms[essentialPath.Length - remainingLength] = null;
+                        return false;
                     }
                 }
             }
@@ -340,4 +396,42 @@ public class MapBuilder : MonoBehaviour
 
         return false; //If everything fails to make a room then this recursive path doesn't work
     }
+
+    /*void finishPaths()
+    {
+        for (int i = 0; i < allRooms.Length; i++)//Dont use rooms that try to open into another room without a corresponding door i.e. Room R and cant be put on the left of Room UD
+        {
+            if (allRooms[i] != null)
+            {
+                if (allRooms[i].x == x && allRooms[i].y == y + 1)//disable up door if there isn't a corresponding door, else enable up door
+                {
+                    if ((allRooms[i].door & DOWN) != DOWN)
+                        numPossibleRooms = numPossibleRooms & 7;
+                    else
+                        needDoor = needDoor | UP;
+                }
+                if (allRooms[i].x == x && allRooms[i].y == y - 1)//disable down...
+                {
+                    if ((allRooms[i].door & UP) != UP)
+                        numPossibleRooms = numPossibleRooms & 11;
+                    else
+                        needDoor = needDoor | DOWN;
+                }
+                if (allRooms[i].x == x - 1 && allRooms[i].y == y)//disable left...
+                {
+                    if ((allRooms[i].door & RIGHT) != RIGHT)
+                        numPossibleRooms = numPossibleRooms & 13;
+                    else
+                        needDoor = needDoor | LEFT;
+                }
+                if (allRooms[i].x == x + 1 && allRooms[i].y == y)//disable right...
+                {
+                    if ((allRooms[i].door & LEFT) != LEFT)
+                        numPossibleRooms = numPossibleRooms & 14;
+                    else
+                        needDoor = needDoor | RIGHT;
+                }
+            }
+        }
+    }*/
 }
