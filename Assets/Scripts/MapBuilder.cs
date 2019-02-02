@@ -150,7 +150,7 @@ public class MapBuilder : MonoBehaviour
         }
 
         int cameFrom = needDoor;        //Door that you came from
-        int[] possibleRooms = new int[16];
+        int[] possibleRooms = new int[16];  //Array of possible rooms given the state of surrounding rooms
         int numPossibleRooms = 15;
 
         for (int i = 0; i < allRooms.Length; i++)//Dont use rooms that try to open into another room without a corresponding door i.e. Room R and cant be put on the left of Room UD
@@ -204,7 +204,7 @@ public class MapBuilder : MonoBehaviour
 
         int rand = Random.Range(0, 16);
         int dontInfLoop = 0;
-        while ((possibleRooms[rand] == 0 || possibleRooms[rand] == UP || possibleRooms[rand] == DOWN || possibleRooms[rand] == LEFT || possibleRooms[rand] == 1) && dontInfLoop < 100)//get a random room from the list of possible rooms
+        while ((possibleRooms[rand] == 0 || possibleRooms[rand] == UP || possibleRooms[rand] == DOWN || possibleRooms[rand] == LEFT || possibleRooms[rand] == RIGHT) && dontInfLoop < 100)//get a random room from the list of all rooms
         {
             rand = Random.Range(0, 16);
             dontInfLoop++;
@@ -215,7 +215,7 @@ public class MapBuilder : MonoBehaviour
         int[] randList = new int[] { RIGHT, LEFT, DOWN, UP };
         int direction = randList[Random.Range(0, randList.Length)];
         dontInfLoop = 0;
-        while (((direction & numPossibleRooms) != direction || direction == needDoor || ((possibleRooms[rand] & direction) != direction)) && dontInfLoop < 100)//get a random direction from the four cardinal directions
+        while (((direction & numPossibleRooms) != direction || direction == needDoor || ((possibleRooms[rand] & direction) != direction)) && dontInfLoop < 100)//get a random direction from the four cardinal directions and possible directions from numpossiblerooms
         {
             direction = randList[Random.Range(0, randList.Length)];
             dontInfLoop++;
@@ -343,9 +343,10 @@ public class MapBuilder : MonoBehaviour
             {
                 if (rooms[k].door == numPossibleRooms)
                 {
+                    allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                     if ((numPossibleRooms & UP) == UP && cameFrom != UP && checkRoom(x, y + 1, remainingLength - 1, DOWN)) //try up room
                     {
-                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                         allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -355,7 +356,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     else if ((numPossibleRooms & DOWN) == DOWN && cameFrom != DOWN && checkRoom(x, y - 1, remainingLength - 1, UP)) //try down
                     {
-                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                         allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -365,7 +366,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     else if ((numPossibleRooms & LEFT) == LEFT && cameFrom != LEFT && checkRoom(x - 1, y, remainingLength - 1, RIGHT)) //try left
                     {
-                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                         allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -375,7 +376,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     else if ((numPossibleRooms & RIGHT) == RIGHT && cameFrom != RIGHT && checkRoom(x + 1, y, remainingLength - 1, LEFT)) //try right
                     {
-                        allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                         allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
