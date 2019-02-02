@@ -227,7 +227,9 @@ public class MapBuilder : MonoBehaviour
             {
                 allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
                 allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
-                if(cameFrom == UP)
+                allRooms[essentialPath.Length - remainingLength].x = x;
+                allRooms[essentialPath.Length - remainingLength].y = y;
+                if (cameFrom == UP)
                 {
                     allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
@@ -250,12 +252,10 @@ public class MapBuilder : MonoBehaviour
                     allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
                     allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
                 }
-                allRooms[essentialPath.Length - remainingLength].x = x;
-                allRooms[essentialPath.Length - remainingLength].y = y;
                 k = 9999;
             }
         }
-        if (allRooms[essentialPath.Length - remainingLength] == null)   //if the room type doesn't exist then make the first room in the array
+        /*if (allRooms[essentialPath.Length - remainingLength] == null)   //if the room type doesn't exist then make the first room in the array
         {
             allRooms[essentialPath.Length - remainingLength] = rooms[0].Copy();
             allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
@@ -264,7 +264,7 @@ public class MapBuilder : MonoBehaviour
             //Room aaa = rooms[0].Copy();
             //aaa.roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
 
-        }
+        }*/
 
         if ((possibleRooms[rand] & direction) == direction)//if the room and direction are possible in that room i.e. UDR can go down but can't go left
         {
@@ -325,7 +325,8 @@ public class MapBuilder : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(tempRoom);
+                    if (allRooms[essentialPathLength - remainingLength] != null)
+                        Destroy(allRooms[essentialPathLength - remainingLength].roomObject);
                     allRooms[essentialPath.Length - remainingLength] = null;
                 }
             }
@@ -344,44 +345,31 @@ public class MapBuilder : MonoBehaviour
                 if (rooms[k].door == numPossibleRooms)
                 {
                     allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
+                    allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                    allRooms[essentialPath.Length - remainingLength].x = x;
+                    allRooms[essentialPath.Length - remainingLength].y = y;
                     if ((numPossibleRooms & UP) == UP && cameFrom != UP && checkRoom(x, y + 1, remainingLength - 1, DOWN)) //try up room
                     {
-                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
-                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].upRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].downRoom = allRooms[essentialPathLength - remainingLength - 1];
-                        allRooms[essentialPath.Length - remainingLength].x = x;
-                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
                     else if ((numPossibleRooms & DOWN) == DOWN && cameFrom != DOWN && checkRoom(x, y - 1, remainingLength - 1, UP)) //try down
                     {
-                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
-                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].downRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].upRoom = allRooms[essentialPathLength - remainingLength - 1];
-                        allRooms[essentialPath.Length - remainingLength].x = x;
-                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
                     else if ((numPossibleRooms & LEFT) == LEFT && cameFrom != LEFT && checkRoom(x - 1, y, remainingLength - 1, RIGHT)) //try left
                     {
-                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
-                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].leftRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].rightRoom = allRooms[essentialPathLength - remainingLength - 1];
-                        allRooms[essentialPath.Length - remainingLength].x = x;
-                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
                     else if ((numPossibleRooms & RIGHT) == RIGHT && cameFrom != RIGHT && checkRoom(x + 1, y, remainingLength - 1, LEFT)) //try right
                     {
-                        //allRooms[essentialPath.Length - remainingLength] = rooms[k].Copy();
-                        allRooms[essentialPath.Length - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
                         allRooms[essentialPathLength - remainingLength - 1].rightRoom = allRooms[essentialPathLength - remainingLength];
                         allRooms[essentialPathLength - remainingLength].leftRoom = allRooms[essentialPathLength - remainingLength - 1];
-                        allRooms[essentialPath.Length - remainingLength].x = x;
-                        allRooms[essentialPath.Length - remainingLength].y = y;
                         return true;
                     }
                     else
