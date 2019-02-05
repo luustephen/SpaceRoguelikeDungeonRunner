@@ -431,8 +431,8 @@ MonoBehaviour:
   - {fileID: 1062576410708592, guid: b4dc886a2603e66419025f6828d8cae9, type: 2}
   - {fileID: 1616740879072490, guid: 8d6eec155c0250840b89e1fc629964c4, type: 2}
   - {fileID: 1728861861365548, guid: 1f01690586618b148aba9f2c28e80348, type: 2}
-  numRooms: 50
-  essentialPathLength: 40
+  numRooms: 30
+  essentialPathLength: 15
   startingRoom: 0
 --- !u!1 &461624271
 GameObject:
