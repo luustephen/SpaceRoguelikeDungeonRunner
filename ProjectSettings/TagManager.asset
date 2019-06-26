@@ -8,6 +8,16 @@ TagManager:
   - Left Wall
   - Up Wall
   - Down Wall
+  - Light
+  - Floor
+  - Room
+  - Up Door
+  - Down Door
+  - Left Door
+  - Right Door
+  - Hallway
+  - Hitbox
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -18,11 +28,11 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LightOn
+  - LightAmbient
+  - LightOff
+  - Entities
+  - Objects
   - 
   - 
   - 
@@ -42,6 +52,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Floor
+    uniqueID: 1012892017
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
