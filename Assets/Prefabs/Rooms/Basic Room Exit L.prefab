@@ -104,6 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4308600681889652}
   - component: {fileID: 212158017776031962}
+  - component: {fileID: 61533919133187756}
   m_Layer: 11
   m_Name: floor
   m_TagString: Floor
@@ -504,6 +505,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.09961072, y: 0.2}
   m_EdgeRadius: 0
+--- !u!61 &61533919133187756
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1345213979840104}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.2, y: 0.2}
+    newSize: {x: 0.4, y: 0.4}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2}
+  m_EdgeRadius: 0
 --- !u!61 &61763452316807972
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -619,6 +645,9 @@ MonoBehaviour:
   layerLightsOn: 9
   layerLightsOff: 11
   maxLight: 0.5
+  maxEnemiesInRoom: 10
+  shouldSpawnEnemies: 1
+  transparent: {fileID: 2100000, guid: 3cee20aabd3d4464091d4d3a6772e3e3, type: 2}
 --- !u!114 &114187718861025628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -634,6 +663,7 @@ MonoBehaviour:
   openDistance: 6
   speed: 0.2
   openVertical: 1
+  shouldOpen: 1
 --- !u!212 &212031107892338216
 SpriteRenderer:
   m_ObjectHideFlags: 1

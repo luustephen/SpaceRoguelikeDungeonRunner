@@ -13,13 +13,14 @@ public class DoorOpen : MonoBehaviour
     public float openDistance;                      //How far the door needs to move to open completely
     public float speed;                             //Door opening speed
     public bool openVertical;
+    public bool shouldOpen;                         //Whether the door should open up
 
     // Use this for initialization
     void Start()
     {
         originalPosition = transform.position;
 
-        if(openVertical)
+        if (openVertical)
             openedPosition = new Vector3(transform.position.x, transform.position.y + openDistance, transform.position.z);
         else
             openedPosition = new Vector3(transform.position.x + openDistance, transform.position.y, transform.position.z);
@@ -38,7 +39,7 @@ public class DoorOpen : MonoBehaviour
         {
             for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it vertical
             {
-                if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.y <= openedPosition.y)
+                if (shouldOpen && Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.y <= openedPosition.y)
                 {
                     transform.Translate(0, speed, 0);
                 }
@@ -52,7 +53,7 @@ public class DoorOpen : MonoBehaviour
         {
             for (int i = 0; i < numPlayers; i++)        //Open door when player is nearby, else close it horizontal
             {
-                if (Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.x <= openedPosition.x)
+                if (shouldOpen && Mathf.Abs(players[i].transform.position.x - originalPosition.x) < playerOpenDistance && Mathf.Abs(players[i].transform.position.y - originalPosition.y) < playerOpenDistance && transform.position.x <= openedPosition.x)
                 {
                     transform.Translate(speed, 0, 0);
                 }

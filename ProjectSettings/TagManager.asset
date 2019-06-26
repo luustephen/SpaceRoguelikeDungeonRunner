@@ -16,6 +16,8 @@ TagManager:
   - Left Door
   - Right Door
   - Hallway
+  - Hitbox
+  - Enemy
   layers:
   - Default
   - TransparentFX

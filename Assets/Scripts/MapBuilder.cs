@@ -32,11 +32,11 @@ public class MapBuilder : MonoBehaviour
         public int door;//What kind of door ways it has, see above
         public int x;
         public int y;
-        public bool isHallway;
-        public GameObject roomObject;
+        public bool isHallway; //Whether this room is a hallway or not, probably don't need this variable
+        public GameObject roomObject; //Gameobject associated with the room
         public Room leftRoom; //THESE ROOM OBJECT POINTERS BECOME OBSOLETE AFTER THE CREATEROOMMAP() METHOD IS RUN, IF YOU NEED TO SEE NEARBY ROOMS USE room.door AND roomMap[]
         public Room rightRoom; //ONLY USED FOR ESSENTIAL PATH CREATION
-        public Room upRoom;
+        public Room upRoom; //Pointers to nearby rooms to be used for essential path creation
         public Room downRoom;
 
         public Room Copy()
@@ -51,19 +51,20 @@ public class MapBuilder : MonoBehaviour
         }
     }
 
-    public GameObject[] prebuiltRooms;
-    private Room[] rooms;
-    private Room[] essentialPath;
-    private Room[] allRooms;
-    private Room[,] roomMap;
-    public int numRooms;
-    public int essentialPathLength;
-    public int startingRoom;
+    public GameObject[] prebuiltRooms; //Set of rooms that have be built to have all the necessary components i.e. doors, walls, tags, etc.
+    private Room[] rooms; //Set of room objects that are mapped to the same indicies as prebuilt rooms, holds room information gathered from the gameobject.
+    private Room[] essentialPath; //Set or all essential path rooms
+    private Room[] allRooms; //Set of all rooms
+    private Room[,] roomMap; //2D array to visually represent the layout of rooms; is offset by x and y + essentialPathLength because arrays can't have negative values
+    public float dimensions = 20.6f; //Dimensions for each room, assumes square rooms
+    public int numRooms; //Max number of rooms
+    public int essentialPathLength; //Length of the initial path built, minimum rooms to travel to end the level
+    public int startingRoom; //Index of starting room using prebuilt rooms array above
 
 
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         rooms = new Room[prebuiltRooms.Length];
         for (int i = 0; i < prebuiltRooms.Length; i++)
@@ -143,7 +144,7 @@ public class MapBuilder : MonoBehaviour
 
         int cameFrom = needDoor;        //Door that you came from
         int[] possibleRooms = new int[16];  //Array of possible rooms given the state of surrounding rooms
-        int numPossibleRooms = 15;
+        int numPossibleRooms = 15; //Number of different room types, see room codes above
 
         for (int i = 0; i < allRooms.Length; i++)//Dont use rooms that try to open into another room without a corresponding door i.e. Room R and cant be put on the left of Room UD
         {
@@ -218,7 +219,7 @@ public class MapBuilder : MonoBehaviour
             if (rooms[k].door == possibleRooms[rand])
             {
                 allRooms[essentialPathLength - remainingLength] = rooms[k].Copy();
-                allRooms[essentialPathLength - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                allRooms[essentialPathLength - remainingLength].roomObject.transform.position = new Vector3(x * dimensions, y * dimensions, 0);
                 allRooms[essentialPathLength - remainingLength].x = x;
                 allRooms[essentialPathLength - remainingLength].y = y;
                 if (cameFrom == UP)
@@ -327,7 +328,7 @@ public class MapBuilder : MonoBehaviour
                 if (rooms[k].door == numPossibleRooms)
                 {
                     allRooms[essentialPathLength - remainingLength] = rooms[k].Copy();
-                    allRooms[essentialPathLength - remainingLength].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                    allRooms[essentialPathLength - remainingLength].roomObject.transform.position = new Vector3(x * dimensions, y * dimensions, 0);
                     allRooms[essentialPathLength - remainingLength].x = x;
                     allRooms[essentialPathLength - remainingLength].y = y;
                     if ((numPossibleRooms & UP) == UP && cameFrom != UP && CreateRoomEssential(x, y + 1, remainingLength - 1, DOWN)) //try up room
@@ -426,7 +427,7 @@ public class MapBuilder : MonoBehaviour
                                         y -= essentialPathLength;
                                         allRooms[allRoomsIndex].x = x;
                                         allRooms[allRoomsIndex].y = y;
-                                        allRooms[allRoomsIndex++].roomObject.transform.position = new Vector3(x * 20.6f, y * 20.6f, 0);
+                                        allRooms[allRoomsIndex++].roomObject.transform.position = new Vector3(x * dimensions, y * dimensions, 0);
                                         k = 9999;
                                     }
                                 }
@@ -446,6 +447,29 @@ public class MapBuilder : MonoBehaviour
         {
             if (allRooms[i] != null)
                 roomMap[(int)allRooms[i].x + essentialPathLength, (int)allRooms[i].y + essentialPathLength] = allRooms[i];
+        }
+    }
+
+    public GameObject[] getAllRooms()
+    {
+        GameObject[] temp;
+        if (allRooms != null)
+        {
+            temp = new GameObject[allRooms.Length];
+            for (int i = 0; i < allRooms.Length; i++)
+            {
+                if (allRooms[i] != null) { 
+                    temp[i] = allRooms[i].roomObject;
+                    print(temp[i].transform.position.x + "," + temp[i].transform.position.y);
+                    //temp[i].transform.Translate(Vector3.up * dimensions * 2);
+                    //temp[i].transform.Translate(Vector3.left * dimensions * 2);
+                }
+            }
+            return temp;
+        }
+        else
+        {
+            return null;
         }
     }
 }

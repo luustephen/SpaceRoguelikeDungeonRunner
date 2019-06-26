@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour {
     public float primaryAttackCooldown, secondaryAttackCooldown;
     private Transform attackHitbox;
     private SpriteRenderer attackSprite;
-    private BoxCollider attackCollider;
+    private BoxCollider2D attackCollider;
     private SphereCollider secondaryattackspriteCollider;
     private int numSwingHitboxes;               //Odd number of swing hitboxes to create during swing
     private float swingIncrementWidth;
@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour {
         //secondaryAttackCooldown = .3f;
         attackHitbox = gameObject.transform.GetChild(1);
         attackSprite = attackHitbox.gameObject.GetComponent<SpriteRenderer>();
-        attackCollider  = attackHitbox.gameObject.GetComponent<BoxCollider>();
+        attackCollider  = attackHitbox.gameObject.GetComponent<BoxCollider2D>();
         numSwingHitboxes = 5;
         swingIncrementWidth = swingWidth/numSwingHitboxes;
     }
