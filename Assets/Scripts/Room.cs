@@ -103,12 +103,15 @@ public class Room : MonoBehaviour {
 
                 for (int z = 0; z < transform.childCount; z++)
                 {
-                    children[z].gameObject.layer = layerLightsOn;
-
-                    SpriteRenderer sprite;
-                    if (sprite = children[z].GetComponent<SpriteRenderer>()) //Set material to normal if player is in room
+                    if (children[z])
                     {
-                        sprite.material = childMaterials[z];
+                        children[z].gameObject.layer = layerLightsOn;
+
+                        SpriteRenderer sprite;
+                        if (sprite = children[z].GetComponent<SpriteRenderer>()) //Set material to normal if player is in room
+                        {
+                            sprite.material = childMaterials[z];
+                        }
                     }
                 }
                 //floor.layer = layerLightsOn;
@@ -154,7 +157,10 @@ public class Room : MonoBehaviour {
                 {
                     for (int z = 0; z < transform.childCount; z++)
                     {
-                        children[z].gameObject.layer = layerLightsAmbient;
+                        if (children[z])
+                        {
+                            children[z].gameObject.layer = layerLightsAmbient;
+                        }
                     }
                     //floor.layer = layerLightsAmbient;
 
@@ -168,19 +174,22 @@ public class Room : MonoBehaviour {
                 {
                     for (int z = 0; z < transform.childCount; z++)
                     {
-                        children[z].gameObject.layer = layerLightsOff;
-
-                        SpriteRenderer sprite;
-                        if (sprite = children[z].GetComponent<SpriteRenderer>()) //Set material to transparent if player isnt in room
+                        if (children[z])
                         {
-                            sprite.material = transparent;
+                            children[z].gameObject.layer = layerLightsOff;
+
+                            SpriteRenderer sprite;
+                            if (sprite = children[z].GetComponent<SpriteRenderer>()) //Set material to transparent if player isnt in room
+                            {
+                                sprite.material = transparent;
+                            }
                         }
-                    }
-                    //floor.layer = layerLightsOff;
-                    for (int a = 0; a < enemiesInRoomList.Length; a++)
-                    {
-                        if (enemiesInRoomList[a] != null)
-                            enemiesInRoomList[a].layer = layerLightsOff;
+                        //floor.layer = layerLightsOff;
+                        for (int a = 0; a < enemiesInRoomList.Length; a++)
+                        {
+                            if (enemiesInRoomList[a] != null)
+                                enemiesInRoomList[a].layer = layerLightsOff;
+                        }
                     }
                 }
             }

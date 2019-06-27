@@ -161,4 +161,19 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    public void LockMovement()
+    {
+        lockL = true;
+        lockR = true;
+        lockD = true;
+        lockU = true;
+    }
+
+    public void UnlockMovement()
+    {
+        lockL = false;
+        lockR = false;
+        lockD = false;
+        lockU = false;
+    }
 }

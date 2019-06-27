@@ -14,6 +14,11 @@ public class PlayerHealth : MonoBehaviour {
     public Material transparent;
     private Material originalMaterial;
     private SpriteRenderer sprite;
+    private Rigidbody2D rigidbody;
+    private Vector2 knockbackDirection;
+    public float knockbackTime = .3f;
+    public float knockbackForce = 5;
+    private PlayerMovement movementScript;
 
     Animator anim;
     PlayerMovement playerMovement;
@@ -27,6 +32,8 @@ public class PlayerHealth : MonoBehaviour {
         currentHealth = startingHealth;
         sprite = gameObject.GetComponent<SpriteRenderer>();
         originalMaterial = sprite.material;
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        movementScript = gameObject.GetComponent<PlayerMovement>();
     }
 
     void Update()
@@ -60,7 +67,10 @@ public class PlayerHealth : MonoBehaviour {
         {
             this.TakeDamage(5);
             invincible = true;
-            StartCoroutine("IFrames",invincibilityTime);
+            knockbackDirection = new Vector2(collision.transform.position.x - transform.position.x,collision.transform.position.y - transform.position.y); //Force direction to apply that pushes player away from enemy
+            StartCoroutine(Knockback(knockbackTime));
+            StartCoroutine(IFrames(invincibilityTime));
+            print(knockbackTime);
         }
     }
 
@@ -79,4 +89,12 @@ public class PlayerHealth : MonoBehaviour {
         invincible = false;
     }
 
+    IEnumerator Knockback(float knockbackTime)
+    {
+        rigidbody.AddForce(-knockbackForce * knockbackDirection, ForceMode2D.Impulse);
+        movementScript.LockMovement();
+        yield return new WaitForSeconds(knockbackTime);
+        movementScript.UnlockMovement();
+        rigidbody.AddForce(knockbackForce*knockbackDirection, ForceMode2D.Impulse);
+    }
 }
