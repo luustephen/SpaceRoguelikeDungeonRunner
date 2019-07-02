@@ -63,14 +63,16 @@ public class PlayerHealth : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.tag == "Enemy" && !invincible)
+        if (collision.transform.tag == "Enemy")
         {
-            this.TakeDamage(5);
-            invincible = true;
-            knockbackDirection = new Vector2(collision.transform.position.x - transform.position.x,collision.transform.position.y - transform.position.y); //Force direction to apply that pushes player away from enemy
+            knockbackDirection = new Vector2(collision.transform.position.x - transform.position.x, collision.transform.position.y - transform.position.y); //Force direction to apply that pushes player away from enemy
             StartCoroutine(Knockback(knockbackTime));
-            StartCoroutine(IFrames(invincibilityTime));
-            print(knockbackTime);
+            if (!invincible)
+            { 
+                TakeDamage(5);
+                invincible = true;
+                StartCoroutine(IFrames(invincibilityTime));
+            }
         }
     }
 
@@ -96,5 +98,7 @@ public class PlayerHealth : MonoBehaviour {
         yield return new WaitForSeconds(knockbackTime);
         movementScript.UnlockMovement();
         rigidbody.AddForce(knockbackForce*knockbackDirection, ForceMode2D.Impulse);
+        rigidbody.velocity = Vector2.zero;
+        rigidbody.angularVelocity = 0;
     }
 }

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour {
-
-    public int health;
+public class PlayerProjectile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 	
 	// Update is called once per frame
@@ -18,13 +16,10 @@ public class EnemyHealth : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player Attack")
+        if(collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" )
         {
-            health--;
-            if (health == 0)
-            {
-                Destroy(gameObject);
-            }
+            print(collision.gameObject.tag);
+            Destroy(gameObject);
         }
     }
 }
