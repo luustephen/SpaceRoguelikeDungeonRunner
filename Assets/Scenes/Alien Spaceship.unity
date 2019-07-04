@@ -595,7 +595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 592907203}
-  restartDelay: 5
+  restartDelay: 2
 --- !u!95 &489191802
 Animator:
   serializedVersion: 3
@@ -869,11 +869,11 @@ MonoBehaviour:
   primaryAttack: 323
   secondaryAttack: 324
   primaryAttackCooldown: 0.03
-  secondaryAttackCooldown: 0.2
+  secondaryAttackCooldown: 0.1
   swingWidth: 1
-  projectilePrefab: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
+  projectilePrefab: {fileID: 50687144104024486, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
     type: 2}
-  projectileInstance: {fileID: 50311857317228960, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
+  projectileInstance: {fileID: 50687144104024486, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
     type: 2}
 --- !u!1 &602939507
 GameObject:

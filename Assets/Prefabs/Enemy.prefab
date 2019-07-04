@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 61417108792702898}
   - component: {fileID: 50532543091561646}
   - component: {fileID: 114227833244196484}
+  - component: {fileID: 114959852453076398}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Enemy
@@ -37,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1813320238409392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.061268, y: 10.108418, z: 0}
+  m_LocalPosition: {x: 39.59858, y: -90.43782, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,6 +101,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
+--- !u!114 &114959852453076398
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1813320238409392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ece3ec9a0addbc48905fb43c457fd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 4
+  waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
+  fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
+  lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
 --- !u!212 &212702294658001460
 SpriteRenderer:
   m_ObjectHideFlags: 1

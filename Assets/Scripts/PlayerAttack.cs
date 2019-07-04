@@ -66,6 +66,7 @@ public class PlayerAttack : MonoBehaviour {
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);
                 projectileInstance.AddForce(new Vector3(x, y, 0) * 1000);
+                projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
 
                 secondaryOnCooldown = true; 
                 //secondaryattackSprite.enabled = true;
