@@ -18,6 +18,7 @@ TagManager:
   - Hallway
   - Enemy
   - Player Attack
+  - Obstacle
   layers:
   - Default
   - TransparentFX

@@ -21,11 +21,21 @@ public class ElementalEffects : MonoBehaviour {
     public const int FIRE = 4;
     public const int WATER = 2;
     public const int LIGHTNING = 1;
+    public const int FIREWATER = 6;
+    public const int WATERLIGHTNING = 3;
+    public const int FIRELIGHTNING = 5;
+    public const int FIREWATERLIGHTNING = 7;
+
     public int element = 0; //What element does this object start at
+
     private Material originalMaterial;
     public Material waterMaterial;
     public Material fireMaterial;
     public Material lightningMaterial;
+    public Material fireWaterMaterial;
+    public Material waterLightningMaterial;
+    public Material fireLightningMaterial;
+    public Material fireWaterLightningMaterial;
     private SpriteRenderer sprite;
 
 	// Use this for initialization
@@ -48,15 +58,31 @@ public class ElementalEffects : MonoBehaviour {
         {
             sprite.material = lightningMaterial;
         }
+        else if (element == FIREWATER)
+        {
+            sprite.material = fireWaterMaterial;
+        }
+        else if (element == FIRELIGHTNING)
+        {
+            sprite.material = fireLightningMaterial;
+        }
+        else if (element == WATERLIGHTNING)
+        {
+            sprite.material = waterLightningMaterial;
+        }
+        else if (element == FIREWATERLIGHTNING)
+        {
+            sprite.material = fireWaterLightningMaterial;
+        }
     }
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-		if(element == ELEMENTLESS)
+	void Update () {
+        if (element == ELEMENTLESS)
         {
             sprite.material = originalMaterial;
         }
-        else if(element == WATER)
+        else if (element == WATER)
         {
             sprite.material = waterMaterial;
         }
@@ -67,6 +93,22 @@ public class ElementalEffects : MonoBehaviour {
         else if (element == LIGHTNING)
         {
             sprite.material = lightningMaterial;
+        }
+        else if (element == FIREWATER)
+        {
+            sprite.material = fireWaterMaterial;
+        }
+        else if (element == FIRELIGHTNING)
+        {
+            sprite.material = fireLightningMaterial;
+        }
+        else if (element == WATERLIGHTNING)
+        {
+            sprite.material = waterLightningMaterial;
+        }
+        else if (element == FIREWATERLIGHTNING)
+        {
+            sprite.material = fireWaterLightningMaterial;
         }
     }
 
