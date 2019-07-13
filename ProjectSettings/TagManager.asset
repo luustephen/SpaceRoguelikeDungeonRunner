@@ -56,6 +56,9 @@ TagManager:
   - name: Floor
     uniqueID: 1012892017
     locked: 0
+  - name: RoomOverlay
+    uniqueID: 18781571
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
