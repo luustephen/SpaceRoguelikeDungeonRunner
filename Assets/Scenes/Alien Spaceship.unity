@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009786535, g: 0.05188808, b: 0.1522932, a: 1}
+  m_IndirectSpecularColor: {r: 0.009786518, g: 0.051888436, b: 0.1522932, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1503,6 +1503,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1282765154}
   - component: {fileID: 1282765155}
+  - component: {fileID: 1282765156}
+  - component: {fileID: 1282765157}
   m_Layer: 9
   m_Name: Armband
   m_TagString: Untagged
@@ -1569,6 +1571,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1282765156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1282765153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ece3ec9a0addbc48905fb43c457fd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 0
+  waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
+  fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
+  lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
+  fireWaterMaterial: {fileID: 2100000, guid: 40adbdf1333702b42a73bc1de02c05b0, type: 2}
+  waterLightningMaterial: {fileID: 2100000, guid: 1ad43559ec8572049af7ed4ab3bfb2fc,
+    type: 2}
+  fireLightningMaterial: {fileID: 2100000, guid: 27bee8ee76c1f194a805b766269245ab,
+    type: 2}
+  fireWaterLightningMaterial: {fileID: 2100000, guid: a66fb5b581838614dad24dbd6acb02ff,
+    type: 2}
+--- !u!114 &1282765157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1282765153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af9b0f28a4c38844af9242ece3485bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1447285576
 GameObject:
   m_ObjectHideFlags: 0
