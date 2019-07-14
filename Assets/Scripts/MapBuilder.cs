@@ -57,8 +57,11 @@ public class MapBuilder : MonoBehaviour
     private Room[] allRooms; //Set of all rooms
     private Room[,] roomMap; //2D array to visually represent the layout of rooms; is offset by x and y + essentialPathLength because arrays can't have negative values
     public float dimensions = 20.6f; //Dimensions for each room, assumes square rooms
+    [Tooltip("Total number of rooms, must be larger than essential path")]
     public int numRooms; //Max number of rooms
+    [Tooltip("Number of rooms to reach the final room")]
     public int essentialPathLength; //Length of the initial path built, minimum rooms to travel to end the level
+    [Tooltip("What room should be used as the starting room")]
     public int startingRoom; //Index of starting room using prebuilt rooms array above
 
 

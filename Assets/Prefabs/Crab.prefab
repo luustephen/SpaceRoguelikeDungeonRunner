@@ -24,8 +24,9 @@ GameObject:
   - component: {fileID: 50532543091561646}
   - component: {fileID: 114227833244196484}
   - component: {fileID: 114959852453076398}
+  - component: {fileID: 114203500037864012}
   m_Layer: 11
-  m_Name: Enemy
+  m_Name: Crab
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1813320238409392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.770573, y: 54.83226, z: 0}
+  m_LocalPosition: {x: 2.2957041, y: -96.01166, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,6 +90,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.15765288, y: 0.15785259}
   m_EdgeRadius: 0
+--- !u!114 &114203500037864012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1813320238409392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f37d6064ec6e2647a716b482a83aa74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveHorizontal: 1
+  speed: 20
 --- !u!114 &114227833244196484
 MonoBehaviour:
   m_ObjectHideFlags: 1

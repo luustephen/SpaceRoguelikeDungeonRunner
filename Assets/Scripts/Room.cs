@@ -207,4 +207,13 @@ public class Room : MonoBehaviour {
         }
         lightOn = true;
     }
+
+    public bool InsideRoom(GameObject objectToCheck) //Whether an object is inside this room
+    {
+        if(objectToCheck.transform.position.x > leftmostWall.transform.position.x && objectToCheck.transform.position.x < rightmostWall.transform.position.x && objectToCheck.transform.position.y > downmostWall.transform.position.y && objectToCheck.transform.position.y < upmostWall.transform.position.y)
+        {
+            return true;
+        }
+        return false;
+    }
 }
