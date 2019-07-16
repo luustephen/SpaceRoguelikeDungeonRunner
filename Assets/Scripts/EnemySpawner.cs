@@ -24,9 +24,10 @@ public class EnemySpawner : MonoBehaviour {
                 {
                     if (roomObjects[i] != null && roomObjects[i].GetComponent<Room>().shouldSpawnEnemies) //Check if the room exists and if you should spawn enemies in it
                     {
-                        Vector3 center = new Vector3(roomObjects[i].transform.position.x + Random.Range(0,dimensions), roomObjects[i].transform.position.y + Random.Range(- dimensions / 2, dimensions / 2), roomObjects[i].transform.position.z); //Center of room
-                        enemies[0].transform.SetPositionAndRotation(center,Quaternion.identity);
-                        Instantiate(enemies[0]); //spawn enemy inside room dimensions
+                        int rand = Random.Range(0,enemies.Length);
+                        Vector3 position = new Vector3(roomObjects[i].transform.position.x + Random.Range(0,dimensions), roomObjects[i].transform.position.y + Random.Range(- dimensions / 2, dimensions / 2), roomObjects[i].transform.position.z); //Spawn somewhere within room kinda
+                        enemies[rand].transform.SetPositionAndRotation(position,Quaternion.identity);
+                        Instantiate(enemies[rand]); //spawn enemy inside room dimensions
                     }
                 }
             }
