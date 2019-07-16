@@ -7,8 +7,7 @@ public class AlienAI : MonoBehaviour {
     private GameObject player;
     private Room room; //Room that the enemy resides in
     private bool firstpass = true;
-    [Tooltip("Speed increases as number lowers, Don't use 0")]
-    public int speed = 5; //Speed increases as number lowers, dont use 0
+    public float speed = .1f;
 
     // Use this for initialization
     void Start()
@@ -33,11 +32,9 @@ public class AlienAI : MonoBehaviour {
         }
         if (player && room && room.InsideRoom(player))
         {
-            float differenceX; //Difference between the player position and crab, can be x/y difference depending on moveHorizontal
-            float differenceY;
-            differenceX = player.transform.position.x - transform.position.x;
-            differenceY = player.transform.position.y - transform.position.y;
-            transform.Translate(new Vector3(differenceX / speed, differenceY / speed, 0));
+            Vector3 normalizedDirection = (player.transform.position - transform.position).normalized;
+            print(normalizedDirection);
+            transform.Translate(normalizedDirection * speed);
             
         }
     }

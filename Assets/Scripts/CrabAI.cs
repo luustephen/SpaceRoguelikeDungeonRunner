@@ -8,12 +8,15 @@ public class CrabAI : MonoBehaviour {
     private Room room; //Room that the enemy resides in
     public bool moveHorizontal = true;
     private bool firstpass = true;
-    [Tooltip("Speed increases as number lowers, Don't use 0")]
-    public int speed = 5; //Speed increases as number lowers, dont use 0
+    public float speed = .05f; 
 
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player");
+        if(speed != 0)
+        {
+            speed = 1 / speed;
+        }
     }
 	
 	// Update is called once per frame
