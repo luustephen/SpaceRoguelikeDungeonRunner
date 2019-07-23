@@ -19,9 +19,9 @@ public class AlienAI : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        numNodes = numColNodes * numColNodes;
         nodes = new GameObject[numNodes];
         player = GameObject.FindGameObjectWithTag("Player");
-        numNodes = numColNodes * numColNodes;
     }
 
     // Update is called once per frame
