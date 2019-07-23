@@ -8,9 +8,11 @@ public class AlienAI : MonoBehaviour {
     private Room room; //Room that the enemy resides in
     private bool firstpass = true;
     public float speed = .1f;
-    [Tooltip("Number of nodes per room, default 90")]
-    public int nodesX = 
-    private int numNodes = nodesX * nodesY;
+    [Tooltip("Number of nodes in row per room, default 90")]
+    public int numRowNodes = 9;
+    [Tooltip("Number of nodes in column per room, default 90")]
+    public int numColNodes = 9;
+    private int numNodes = -1;
     private GameObject nodeMap;
     private GameObject[] nodes;
 
@@ -19,6 +21,7 @@ public class AlienAI : MonoBehaviour {
     {
         nodes = new GameObject[numNodes];
         player = GameObject.FindGameObjectWithTag("Player");
+        numNodes = numColNodes * numColNodes;
     }
 
     // Update is called once per frame
@@ -35,7 +38,7 @@ public class AlienAI : MonoBehaviour {
                 room = transform.parent.GetComponent<Room>();
             }
 
-            if (transform.parent) //Find the nodemap and put the nodes in an array
+            if (transform.parent && numNodes != -1) //Find the nodemap and put the nodes in an array
             {
                 int i = 0;
                 nodeMap = GameObject.FindGameObjectWithTag("Node");
