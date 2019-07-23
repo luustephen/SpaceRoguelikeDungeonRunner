@@ -8,10 +8,16 @@ public class AlienAI : MonoBehaviour {
     private Room room; //Room that the enemy resides in
     private bool firstpass = true;
     public float speed = .1f;
+    [Tooltip("Number of nodes per room, default 90")]
+    public int nodesX = 
+    private int numNodes = nodesX * nodesY;
+    private GameObject nodeMap;
+    private GameObject[] nodes;
 
     // Use this for initialization
     void Start()
     {
+        nodes = new GameObject[numNodes];
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -20,7 +26,7 @@ public class AlienAI : MonoBehaviour {
     {
         if (firstpass)
         {
-            if (!transform.parent)
+            if (!transform.parent) //If the enemy isn't linked to a room then destroy the enemy
             {
                 Destroy(gameObject);
             }
@@ -28,12 +34,23 @@ public class AlienAI : MonoBehaviour {
             {
                 room = transform.parent.GetComponent<Room>();
             }
+
+            if (transform.parent) //Find the nodemap and put the nodes in an array
+            {
+                int i = 0;
+                nodeMap = GameObject.FindGameObjectWithTag("Node");
+                foreach (Transform child in nodeMap.transform)
+                {
+                    if (i < numNodes)
+                        nodes[i++] = child.gameObject;
+                }
+            }
+
             firstpass = false;
         }
         if (player && room && room.InsideRoom(player))
         {
             Vector3 normalizedDirection = (player.transform.position - transform.position).normalized;
-            print(normalizedDirection);
             transform.Translate(normalizedDirection * speed);
             
         }
