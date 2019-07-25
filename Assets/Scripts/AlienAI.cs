@@ -8,20 +8,25 @@ public class AlienAI : MonoBehaviour {
     private Room room; //Room that the enemy resides in
     private bool firstpass = true;
     public float speed = .1f;
-    [Tooltip("Number of nodes in row per room, default 90")]
+    [Tooltip("Number of nodes in row per room, default 9")]
     public int numRowNodes = 9;
-    [Tooltip("Number of nodes in column per room, default 90")]
+    [Tooltip("Number of nodes in column per room, default 9")]
     public int numColNodes = 9;
     private int numNodes = -1;
     private GameObject nodeMap;
-    private GameObject[] nodes;
+    private GameObject[,] nodeArray;
+    private GameObject start; //Starting node that this alien is in
+    private GameObject goal; //Node that the player is in SET THIS LATER
+    private GameObject nodeToMove; //Node to move towards player
+    private PlayerMovement playerMovementScript;
 
     // Use this for initialization
     void Start()
     {
         numNodes = numColNodes * numColNodes;
-        nodes = new GameObject[numNodes];
+        nodeArray = new GameObject[numRowNodes,numColNodes];
         player = GameObject.FindGameObjectWithTag("Player");
+        playerMovementScript = player.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -41,27 +46,149 @@ public class AlienAI : MonoBehaviour {
             if (transform.parent && numNodes != -1) //Find the nodemap and put the nodes in an array
             {
                 int i = 0;
-                nodeMap = GameObject.FindGameObjectWithTag("Node");
-                foreach (Transform child in nodeMap.transform)
+                int k = 0;
+                //nodeMap = GameObject.FindGameObjectWithTag("Node");
+                foreach (Transform findNodeMap in transform.parent)
                 {
-                    if (i < numNodes)
-                        nodes[i++] = child.gameObject;
+                    if (findNodeMap.tag == "Node")
+                    {
+                        foreach (Transform child in findNodeMap) //Find all children nodes and put them into this array
+                        {
+                            if (i < numRowNodes)
+                            {
+                                nodeArray[i, k] = child.gameObject;
+                                k = (k + 1) % numColNodes;
+                                if (k == 0)
+                                {
+                                    i++;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
             firstpass = false;
         }
+
+        if (start && player && room && room.InsideRoom(player))
+        {
+            goal = playerMovementScript.node;
+            if(goal == null)
+            {
+                goal = nodeArray[1, 1];
+            }
+
+            //print(goal.transform.localPosition + "!!");
+            //print(goal.transform.position + "??");
+
+            Dictionary<GameObject, int> frontier = new Dictionary<GameObject, int>();
+            frontier[start] = 0;
+            Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();
+            Dictionary<GameObject, int> costSoFar = new Dictionary<GameObject, int>();
+            cameFrom[start] = null;
+            costSoFar[start] = 0;
+
+            int numIterations = 0;
+            while (frontier.Count != 0)
+            {
+                GameObject current = null;
+                int highestValue = -1;
+                foreach (KeyValuePair<GameObject, int> node in frontier) //Find highest priority 
+                {
+                    if (node.Value > highestValue)
+                    {
+                        current = node.Key;
+                        highestValue = node.Value;
+                    }
+                }
+
+                if (current == goal || current == null)
+                    break;
+
+                if (current != null)
+                {
+                    frontier.Remove(current);
+                }
+
+                int x = 999; //x and y indices for current
+                int y = 999; //basically where it is in nodeArray
+                for (int i = 0; i < nodeArray.GetLength(0); i++) //rows
+                {
+                    for (int k = 0; k < nodeArray.GetLength(1); k++) //columns
+                    {
+                        if(current.transform.localPosition.x == nodeArray[i, k].transform.localPosition.x && current.transform.localPosition.y == nodeArray[i, k].transform.localPosition.y)
+                        {
+                            x = i;
+                            y = k;
+                        }
+                    }
+                }
+
+                for (int dx = -1; dx < 2 ; dx++) //Check neighbors
+                {
+                    for(int dy = -1; dy < 2; dy++)
+                    {
+                        if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
+                        {
+                            int newCost = costSoFar[current] + 1;
+                            GameObject next = nodeArray[x+dx, y+dy];
+                            if(!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                            {
+                                costSoFar[next] = newCost;
+                                int priority = newCost + (int)GetDistanceToPlayer(next);
+                                frontier[next] = priority;
+                                cameFrom[next] = current;
+                                if(numIterations == 1)
+                                {
+                                    nodeToMove = current;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                numIterations++;
+            }
+            print("hello");
+        }
+
+        /*NodeScript nodeScript = null;
+        for(int i = 0; i < nodeArray.GetLength(0); i++) //rows
+        {
+            for (int k = 0; k < nodeArray.GetLength(1); k++) //columns
+            {
+                if (nodeArray[i, k] != null && (nodeScript = nodeArray[i,k].gameObject.GetComponent<NodeScript>())) //If the node exists and has a nodescript
+                {
+
+                }
+            }
+        }*/
+
+
+
         if (player && room && room.InsideRoom(player))
         {
-            Vector3 normalizedDirection = (player.transform.position - transform.position).normalized;
+            Vector3 normalizedDirection = (nodeToMove.transform.position - transform.position).normalized;
             transform.Translate(normalizedDirection * speed);
-            
+            print(nodeToMove.transform.position + "!!");
+            print(nodeToMove.transform.localPosition + "!!");
+
+
         }
     }
 
-    float GetDistanceToPlayer()
+    float GetDistanceToPlayer(GameObject source)
     {
-        float distance = Mathf.Pow(player.transform.position.y - transform.position.y, 2) + Mathf.Pow(player.transform.position.x - transform.position.x, 2);
+        float distance = Mathf.Pow(player.transform.position.y - source.transform.position.y, 2) + Mathf.Pow(player.transform.position.x - source.transform.position.x, 2);
         return distance;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Node")
+        {
+            start = collision.gameObject;
+        }
     }
 }

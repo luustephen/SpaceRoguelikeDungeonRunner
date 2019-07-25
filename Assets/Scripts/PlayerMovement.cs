@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     public float speed;
     public float maxSpeed;
     private bool lockL, lockR, lockU, lockD;    //Is player not allowed to go that direction
+    public GameObject node;
 
 	// Use this for initialization
 	void Start () {
@@ -142,7 +143,6 @@ public class PlayerMovement : MonoBehaviour {
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("OnCollisionExit executed");
 
         switch (collision.gameObject.tag)
         {
@@ -161,6 +161,13 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Node")
+        {
+            node = collision.gameObject;
+        }
+    }
     public void LockMovement()
     {
         lockL = true;

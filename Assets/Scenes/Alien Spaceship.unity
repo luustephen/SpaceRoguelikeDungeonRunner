@@ -913,6 +913,7 @@ MonoBehaviour:
   jump: 32
   speed: 0.02
   maxSpeed: 0.1
+  node: {fileID: 0}
 --- !u!114 &592907203
 MonoBehaviour:
   m_ObjectHideFlags: 0
