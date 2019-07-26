@@ -18,7 +18,9 @@ public class AlienAI : MonoBehaviour {
     private GameObject start; //Starting node that this alien is in
     private GameObject goal; //Node that the player is in SET THIS LATER
     private GameObject nodeToMove; //Node to move towards player
+    private int nodeToMoveIndex = 1;
     private PlayerMovement playerMovementScript;
+    public bool shouldMove = true;
 
     // Use this for initialization
     void Start()
@@ -79,9 +81,6 @@ public class AlienAI : MonoBehaviour {
                 goal = nodeArray[1, 1];
             }
 
-            //print(goal.transform.localPosition + "!!");
-            //print(goal.transform.position + "??");
-
             Dictionary<GameObject, int> frontier = new Dictionary<GameObject, int>();
             frontier[start] = 0;
             Dictionary<GameObject, GameObject> cameFrom = new Dictionary<GameObject, GameObject>();
@@ -104,7 +103,18 @@ public class AlienAI : MonoBehaviour {
                 }
 
                 if (current == goal || current == null)
+                {
+                    GameObject temp = current;
+                    GameObject beforeTemp = null;
+                    while(cameFrom[temp] != null)
+                    {
+                        beforeTemp = temp;
+                        temp = cameFrom[temp];
+                    }
+                    if(beforeTemp != null)
+                        nodeToMove = beforeTemp;
                     break;
+                }
 
                 if (current != null)
                 {
@@ -129,7 +139,8 @@ public class AlienAI : MonoBehaviour {
                 {
                     for(int dy = -1; dy < 2; dy++)
                     {
-                        if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
+                        //if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
+                        if (x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes)
                         {
                             int newCost = costSoFar[current] + 1;
                             GameObject next = nodeArray[x+dx, y+dy];
@@ -139,18 +150,16 @@ public class AlienAI : MonoBehaviour {
                                 int priority = newCost + (int)GetDistanceToPlayer(next);
                                 frontier[next] = priority;
                                 cameFrom[next] = current;
-                                if(numIterations == 1)
+                                /*if(numIterations == nodeToMoveIndex)
                                 {
                                     nodeToMove = current;
-                                }
+                                }*/
                             }
                         }
                     }
                 }
-
                 numIterations++;
             }
-            print("hello");
         }
 
         /*NodeScript nodeScript = null;
@@ -167,13 +176,12 @@ public class AlienAI : MonoBehaviour {
 
 
 
-        if (player && room && room.InsideRoom(player))
+        if (player && room && room.InsideRoom(player) && shouldMove)
         {
             Vector3 normalizedDirection = (nodeToMove.transform.position - transform.position).normalized;
             transform.Translate(normalizedDirection * speed);
             print(nodeToMove.transform.position + "!!");
             print(nodeToMove.transform.localPosition + "!!");
-
 
         }
     }
@@ -189,6 +197,22 @@ public class AlienAI : MonoBehaviour {
         if(collision.gameObject.tag == "Node")
         {
             start = collision.gameObject;
+        }
+        if(collision.gameObject == nodeToMove)
+        {
+            shouldMove = false;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject == nodeToMove)
+        {
+            shouldMove = false;
+        }
+        else
+        {
+            shouldMove = true;
         }
     }
 }
