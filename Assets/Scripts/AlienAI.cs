@@ -20,7 +20,9 @@ public class AlienAI : MonoBehaviour {
     private GameObject nodeToMove; //Node to move towards player
     private int nodeToMoveIndex = 1;
     private PlayerMovement playerMovementScript;
-    public bool shouldMove = true;
+    private bool shouldMove = true;
+    private bool setANewStart = true; //Should we set a new start point for a*
+    public float howCloseToGet = .5f; //How close to get to each node before moving to next
 
     // Use this for initialization
     void Start()
@@ -71,6 +73,11 @@ public class AlienAI : MonoBehaviour {
             }
 
             firstpass = false;
+        }
+
+        if(Mathf.Abs(transform.position.x - start.transform.position.x) < howCloseToGet && Mathf.Abs(transform.position.y - start.transform.position.y) < howCloseToGet) //if close enough
+        {
+            setANewStart = true;
         }
 
         if (start && player && room && room.InsideRoom(player))
@@ -139,8 +146,7 @@ public class AlienAI : MonoBehaviour {
                 {
                     for(int dy = -1; dy < 2; dy++)
                     {
-                        //if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
-                        if (x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes)
+                        if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
                         {
                             int newCost = costSoFar[current] + 1;
                             GameObject next = nodeArray[x+dx, y+dy];
@@ -194,9 +200,10 @@ public class AlienAI : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Node")
+        if(collision.gameObject.tag == "Node" && setANewStart)
         {
             start = collision.gameObject;
+            setANewStart = false;
         }
         if(collision.gameObject == nodeToMove)
         {

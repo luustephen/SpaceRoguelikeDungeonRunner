@@ -18,7 +18,7 @@ public class NodeScript : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node")
+        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "Player")
         {
             occupied = true;
         }
@@ -26,7 +26,7 @@ public class NodeScript : MonoBehaviour {
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node")
+        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "Player")
         {
             occupied = true;
         }
@@ -34,7 +34,7 @@ public class NodeScript : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node")
+        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "Player")
         { 
             occupied = false;
         }
