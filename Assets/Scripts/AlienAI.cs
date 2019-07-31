@@ -75,7 +75,9 @@ public class AlienAI : MonoBehaviour {
             firstpass = false;
         }
 
-        if(Mathf.Abs(transform.position.x - start.transform.position.x) < howCloseToGet && Mathf.Abs(transform.position.y - start.transform.position.y) < howCloseToGet) //if close enough
+        transform.rotation = new Quaternion(0, 0, 0, 0);
+
+        if(start != null && Mathf.Abs(transform.position.x - start.transform.position.x) < howCloseToGet && Mathf.Abs(transform.position.y - start.transform.position.y) < howCloseToGet) //if close enough
         {
             setANewStart = true;
         }
@@ -182,7 +184,7 @@ public class AlienAI : MonoBehaviour {
 
 
 
-        if (player && room && room.InsideRoom(player) && shouldMove)
+        if (player && room && room.InsideRoom(player) && shouldMove && nodeToMove != null) //if the player is in the room and there is a node to move to
         {
             Vector3 normalizedDirection = (nodeToMove.transform.position - transform.position).normalized;
             transform.Translate(normalizedDirection * speed);
