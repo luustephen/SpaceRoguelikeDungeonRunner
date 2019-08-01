@@ -148,7 +148,7 @@ public class AlienAI : MonoBehaviour {
                 {
                     for(int dy = -1; dy < 2; dy++)
                     {
-                        if(x != 999 && x + dx > 0 && x + dx < numRowNodes && y + dy > 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
+                        if(x != 999 && x + dx >= 0 && x + dx < numRowNodes && y + dy >= 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
                         {
                             int newCost = costSoFar[current] + 1;
                             GameObject next = nodeArray[x+dx, y+dy];
