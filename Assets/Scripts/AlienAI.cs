@@ -23,6 +23,10 @@ public class AlienAI : MonoBehaviour {
     private bool shouldMove = true;
     private bool setANewStart = true; //Should we set a new start point for a*
     public float howCloseToGet = .5f; //How close to get to each node before moving to next
+    private bool modifyMovement = false; //Whether the enemy has gotten stuck on an object, try to move elsewhere;
+    private ContactPoint2D contactPoint; //If enemy hits something, this is where it hit it
+    private bool dontGoUpDown = false;
+    private bool dontGoLeftRight = false;
 
     // Use this for initialization
     void Start()
@@ -186,10 +190,32 @@ public class AlienAI : MonoBehaviour {
 
         if (player && room && room.InsideRoom(player) && shouldMove && nodeToMove != null) //if the player is in the room and there is a node to move to
         {
-            Vector3 normalizedDirection = (nodeToMove.transform.position - transform.position).normalized;
-            transform.Translate(normalizedDirection * speed);
-            print(nodeToMove.transform.position + "!!");
-            print(nodeToMove.transform.localPosition + "!!");
+            Vector3 normalizedDirection = (nodeToMove.transform.position - transform.position).normalized; //normalized direction to next node to move
+            if (modifyMovement) //if the enemy is stuck on an object
+            {
+                if (Mathf.Abs(contactPoint.normal.y) > Mathf.Abs(contactPoint.normal.x)) //if we are further away vertically 
+                {
+                    float leftOrRight = -Mathf.Sign(contactPoint.point.x - transform.position.x); //move left or right to unstuck us
+                    transform.Translate(Vector3.right * speed * leftOrRight);
+                    dontGoUpDown = true;
+                    print("leftright");
+                }
+                else //if we are further away horizontally
+                {
+                    float upOrDown = -Mathf.Sign(contactPoint.point.y - transform.position.y); //move up or down to unstuck us
+                    transform.Translate(Vector3.up * speed * upOrDown);
+                    dontGoLeftRight = true;
+                    print("updown");
+                }
+            }
+            else
+            {
+                transform.Translate(normalizedDirection * speed);
+                dontGoUpDown = false;
+                dontGoLeftRight = false;
+                //print(nodeToMove.transform.position + "!!");
+                //print(nodeToMove.transform.localPosition + "!!");
+            }
 
         }
     }
@@ -222,6 +248,25 @@ public class AlienAI : MonoBehaviour {
         else
         {
             shouldMove = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            modifyMovement = true;
+            contactPoint = collision.GetContact(0);
+            print("COLLIDED");
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            modifyMovement = false;
+            print("UNCOLLIDED");
         }
     }
 }
