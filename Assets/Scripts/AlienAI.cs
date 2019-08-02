@@ -195,16 +195,14 @@ public class AlienAI : MonoBehaviour {
             {
                 if (Mathf.Abs(contactPoint.normal.y) > Mathf.Abs(contactPoint.normal.x)) //if we are further away vertically 
                 {
-                    float leftOrRight = -Mathf.Sign(contactPoint.point.x - transform.position.x); //move left or right to unstuck us
+                    float leftOrRight = (normalizedDirection.x > 0) ? 1 : -1;
                     transform.Translate(Vector3.right * speed * leftOrRight);
-                    dontGoUpDown = true;
                     print("leftright");
                 }
                 else //if we are further away horizontally
                 {
-                    float upOrDown = -Mathf.Sign(contactPoint.point.y - transform.position.y); //move up or down to unstuck us
+                    float upOrDown = (normalizedDirection.y > 0) ? 1 : -1; //move up or down to unstuck us
                     transform.Translate(Vector3.up * speed * upOrDown);
-                    dontGoLeftRight = true;
                     print("updown");
                 }
             }
