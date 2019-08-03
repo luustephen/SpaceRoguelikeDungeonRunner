@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlienAI : MonoBehaviour {
+public class AlienAI : MonoBehaviour
+{
 
     private GameObject player;
     private Room room; //Room that the enemy resides in
@@ -32,7 +33,7 @@ public class AlienAI : MonoBehaviour {
     void Start()
     {
         numNodes = numColNodes * numColNodes;
-        nodeArray = new GameObject[numRowNodes,numColNodes];
+        nodeArray = new GameObject[numRowNodes, numColNodes];
         player = GameObject.FindGameObjectWithTag("Player");
         playerMovementScript = player.GetComponent<PlayerMovement>();
     }
@@ -81,7 +82,7 @@ public class AlienAI : MonoBehaviour {
 
         transform.rotation = new Quaternion(0, 0, 0, 0);
 
-        if(start != null && Mathf.Abs(transform.position.x - start.transform.position.x) < howCloseToGet && Mathf.Abs(transform.position.y - start.transform.position.y) < howCloseToGet) //if close enough
+        if (start != null && Mathf.Abs(transform.position.x - start.transform.position.x) < howCloseToGet && Mathf.Abs(transform.position.y - start.transform.position.y) < howCloseToGet) //if close enough
         {
             setANewStart = true;
         }
@@ -89,7 +90,7 @@ public class AlienAI : MonoBehaviour {
         if (start && player && room && room.InsideRoom(player))
         {
             goal = playerMovementScript.node;
-            if(goal == null)
+            if (goal == null)
             {
                 goal = nodeArray[1, 1];
             }
@@ -119,13 +120,15 @@ public class AlienAI : MonoBehaviour {
                 {
                     GameObject temp = current;
                     GameObject beforeTemp = null;
-                    while(cameFrom[temp] != null)
+                    while (cameFrom[temp] != null)
                     {
                         beforeTemp = temp;
                         temp = cameFrom[temp];
                     }
-                    if(beforeTemp != null)
+                    if (beforeTemp != null)
+                    {
                         nodeToMove = beforeTemp;
+                    }
                     break;
                 }
 
@@ -140,7 +143,7 @@ public class AlienAI : MonoBehaviour {
                 {
                     for (int k = 0; k < nodeArray.GetLength(1); k++) //columns
                     {
-                        if(current.transform.localPosition.x == nodeArray[i, k].transform.localPosition.x && current.transform.localPosition.y == nodeArray[i, k].transform.localPosition.y)
+                        if (current.transform.localPosition.x == nodeArray[i, k].transform.localPosition.x && current.transform.localPosition.y == nodeArray[i, k].transform.localPosition.y)
                         {
                             x = i;
                             y = k;
@@ -148,18 +151,18 @@ public class AlienAI : MonoBehaviour {
                     }
                 }
 
-                for (int dx = -1; dx < 2 ; dx++) //Check neighbors
+                for (int dx = -1; dx < 2; dx++) //Check neighbors
                 {
-                    for(int dy = -1; dy < 2; dy++)
+                    for (int dy = -1; dy < 2; dy++)
                     {
-                        if(x != 999 && x + dx >= 0 && x + dx < numRowNodes && y + dy >= 0 && y + dy < numColNodes && !nodeArray[x+dx, y+dy].GetComponent<NodeScript>().occupied)
+                        if (x != 999 && x + dx >= 0 && x + dx < numRowNodes && y + dy >= 0 && y + dy < numColNodes && !nodeArray[x + dx, y + dy].GetComponent<NodeScript>().occupied)
                         {
                             int newCost = costSoFar[current] + 1;
-                            GameObject next = nodeArray[x+dx, y+dy];
-                            if(!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                            GameObject next = nodeArray[x + dx, y + dy];
+                            if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                             {
                                 costSoFar[next] = newCost;
-                                int priority = newCost + (int)GetDistanceToPlayer(next);
+                                int priority = newCost + (int)GetDistanceToPlayerModified(next);
                                 frontier[next] = priority;
                                 cameFrom[next] = current;
                                 /*if(numIterations == nodeToMoveIndex)
@@ -197,13 +200,13 @@ public class AlienAI : MonoBehaviour {
                 {
                     float leftOrRight = (normalizedDirection.x > 0) ? 1 : -1;
                     transform.Translate(Vector3.right * speed * leftOrRight);
-                    print("leftright");
+                    //print("leftright");
                 }
                 else //if we are further away horizontally
                 {
                     float upOrDown = (normalizedDirection.y > 0) ? 1 : -1; //move up or down to unstuck us
                     transform.Translate(Vector3.up * speed * upOrDown);
-                    print("updown");
+                    //print("updown");
                 }
             }
             else
@@ -212,26 +215,30 @@ public class AlienAI : MonoBehaviour {
                 dontGoUpDown = false;
                 dontGoLeftRight = false;
                 //print(nodeToMove.transform.position + "!!");
-                //print(nodeToMove.transform.localPosition + "!!");
             }
-
+            print(nodeToMove.transform.localPosition + "!!");
         }
     }
 
-    float GetDistanceToPlayer(GameObject source)
+    float GetDistanceToPlayerModified(GameObject source)
     {
         float distance = Mathf.Pow(player.transform.position.y - source.transform.position.y, 2) + Mathf.Pow(player.transform.position.x - source.transform.position.x, 2);
-        return distance;
+        if(400-distance > 0)
+            return 400 - distance;
+        return 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Node" && setANewStart)
+        if (collision.gameObject.tag == "Node" && setANewStart)
         {
-            start = collision.gameObject;
-            setANewStart = false;
+            if (!collision.gameObject.GetComponent<NodeScript>().occupied)
+            {
+                start = collision.gameObject;
+                setANewStart = false;
+            }
         }
-        if(collision.gameObject == nodeToMove)
+        if (collision.gameObject == nodeToMove)
         {
             shouldMove = false;
         }
