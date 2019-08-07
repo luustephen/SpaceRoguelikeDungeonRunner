@@ -22,6 +22,7 @@ public class Room : MonoBehaviour {
     private Transform[] children;
     private Material[] childMaterials;
     public Material transparent;
+    public bool active = false; //If room is active
 
     // Use this for initialization
     void Start()
@@ -139,6 +140,7 @@ public class Room : MonoBehaviour {
                             if (doors[k] != null && doors[k].GetComponent<DoorOpen>())
                                 doors[k].GetComponent<DoorOpen>().shouldOpen = false;
                         }
+                        active = true;
                     }
                     else if (enemiesInRoom == 0) //Unlock if no enemies remain
                     {
@@ -147,6 +149,7 @@ public class Room : MonoBehaviour {
                             if (doors[k] != null && doors[k].GetComponent<DoorOpen>())
                                 doors[k].GetComponent<DoorOpen>().shouldOpen = true;
                         }
+                        active = false;
                     }
                 }
             }
