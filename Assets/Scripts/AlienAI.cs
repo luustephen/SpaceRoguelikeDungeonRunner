@@ -216,7 +216,7 @@ public class AlienAI : MonoBehaviour
                 dontGoLeftRight = false;
                 //print(nodeToMove.transform.position + "!!");
             }
-            print(nodeToMove.transform.localPosition + "!!");
+            //print(nodeToMove.transform.localPosition + "!!");
         }
     }
 
