@@ -16,6 +16,7 @@ public class PlayerAttack : MonoBehaviour {
     public float swingWidth;
     public Rigidbody2D projectilePrefab;
     public Rigidbody2D projectileInstance;
+    private Camera mainCamera;
 
 
     // Use this for initialization
@@ -29,11 +30,12 @@ public class PlayerAttack : MonoBehaviour {
         secondaryOnCooldown = false;
         //primaryAttackCooldown = .2f;
         //secondaryAttackCooldown = .3f;
-        attackHitbox = gameObject.transform.GetChild(1);
+        attackHitbox = transform.GetChild(1); //Find another way of doing this
         attackSprite = attackHitbox.gameObject.GetComponent<SpriteRenderer>();
         attackCollider  = attackHitbox.gameObject.GetComponent<BoxCollider2D>();
         numSwingHitboxes = 5;
         swingIncrementWidth = swingWidth/numSwingHitboxes;
+        mainCamera = transform.GetChild(0).GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -45,7 +47,7 @@ public class PlayerAttack : MonoBehaviour {
             {
                 primaryOnCooldown = true;
                 Vector3 mousePosition = Input.mousePosition;
-                float angle = Mathf.Atan2(mousePosition.y - Screen.height / 2, mousePosition.x - Screen.width / 2);
+                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);
                 attackHitbox.Translate(new Vector3(x, y, 0));
@@ -62,7 +64,7 @@ public class PlayerAttack : MonoBehaviour {
             {
                 Vector3 mousePosition = Input.mousePosition;
                 projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
-                float angle = Mathf.Atan2(mousePosition.y - Screen.height / 2, mousePosition.x - Screen.width / 2);
+                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);
                 projectileInstance.AddForce(new Vector3(x, y, 0) * 1000);
