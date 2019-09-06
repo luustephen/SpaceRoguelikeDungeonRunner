@@ -37,6 +37,7 @@ public class ElementalEffects : MonoBehaviour {
     public Material fireLightningMaterial;
     public Material fireWaterLightningMaterial;
     private SpriteRenderer sprite;
+    public GameObject elementChangedBy;
 
 	// Use this for initialization
 	void Start () {
@@ -118,31 +119,36 @@ public class ElementalEffects : MonoBehaviour {
         if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
         {
             AddElement(otherElementScript.element);
+            elementChangedBy = collision.gameObject;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        ElementalEffects otherElementScript;
+        if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
+        {
+            AddElement(otherElementScript.element);
+            elementChangedBy = collision.gameObject;
         }
     }
 
     public void AddElement(int otherElement)
     {
-        print(gameObject.tag);
         if (((element & FIRE) == FIRE) && ((otherElement & FIRE) == FIRE)) //If the otherelement is reapplying fire
         {
-            print("reapply fire");
         }
         if (((element & WATER) == WATER) && ((otherElement & WATER) == WATER)) //If the otherelement is reapplying water
         {
-            print("reapply water");
         }
         if (((element & LIGHTNING) == LIGHTNING) && ((otherElement & LIGHTNING) == LIGHTNING)) //If the otherelement is reapplying lightning
         {
-            print("reapply light");
         }
         element = element | otherElement;
-        print("add element:" + element);
     }
 
     public void RemoveElement(int otherElement)
     {
         element = element ^ otherElement; //XOR
-        print("remove element:" + element);
     }
 }

@@ -37,7 +37,6 @@ public class CameraScript : MonoBehaviour {
                 {
                     Vector3 normalizedDirection = (roomPosition - transform.position).normalized;
                     transform.Translate(normalizedDirection * speed);
-                    print(normalizedDirection);
                 }
                 else if (Mathf.Abs(transform.position.x - roomPosition.x) < .5f && Mathf.Abs(transform.position.y - roomPosition.y) < .5f)
                 {

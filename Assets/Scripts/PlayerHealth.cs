@@ -42,6 +42,7 @@ public class PlayerHealth : MonoBehaviour {
         {
             this.TakeDamage(5);
         }
+        healthSlider.value = currentHealth;
     }
 
     public void TakeDamage(int amount)

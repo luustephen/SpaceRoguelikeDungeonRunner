@@ -39,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1813320238409392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.412683, y: -80.92171, z: 0}
+  m_LocalPosition: {x: 35.575443, y: 2.8866527, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -137,6 +137,7 @@ MonoBehaviour:
     type: 2}
   fireWaterLightningMaterial: {fileID: 2100000, guid: a66fb5b581838614dad24dbd6acb02ff,
     type: 2}
+  elementChangedBy: {fileID: 0}
 --- !u!212 &212702294658001460
 SpriteRenderer:
   m_ObjectHideFlags: 1

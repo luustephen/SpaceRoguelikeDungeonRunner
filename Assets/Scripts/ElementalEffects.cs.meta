@@ -3,7 +3,17 @@ guid: 4ece3ec9a0addbc48905fb43c457fd52
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
+  - fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
+  - lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
+  - fireWaterMaterial: {fileID: 2100000, guid: 40adbdf1333702b42a73bc1de02c05b0, type: 2}
+  - waterLightningMaterial: {fileID: 2100000, guid: 1ad43559ec8572049af7ed4ab3bfb2fc,
+      type: 2}
+  - fireLightningMaterial: {fileID: 2100000, guid: 27bee8ee76c1f194a805b766269245ab,
+      type: 2}
+  - fireWaterLightningMaterial: {fileID: 2100000, guid: a66fb5b581838614dad24dbd6acb02ff,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

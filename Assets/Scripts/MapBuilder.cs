@@ -463,7 +463,6 @@ public class MapBuilder : MonoBehaviour
             {
                 if (allRooms[i] != null) { 
                     temp[i] = allRooms[i].roomObject;
-                    print(temp[i].transform.position.x + "," + temp[i].transform.position.y);
                     //temp[i].transform.Translate(Vector3.up * dimensions * 2);
                     //temp[i].transform.Translate(Vector3.left * dimensions * 2);
                 }
