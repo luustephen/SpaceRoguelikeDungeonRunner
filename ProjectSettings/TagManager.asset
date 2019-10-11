@@ -20,6 +20,7 @@ TagManager:
   - Player Attack
   - Obstacle
   - Node
+  - PickupItem
   layers:
   - Default
   - TransparentFX
