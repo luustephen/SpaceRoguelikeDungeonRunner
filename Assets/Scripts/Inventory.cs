@@ -13,9 +13,10 @@ public class Inventory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        foreach(Item printitem in itemInventory)
+        foreach(Item eachItem in itemInventory)
         {
-            print(printitem.name);
+            print(eachItem.name);
+            eachItem.UseItem();
         }
 	}
 

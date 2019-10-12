@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 0
+  changeElementOnTouch: 0
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
@@ -997,6 +998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 0
+  changeElementOnTouch: 1
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
@@ -1149,6 +1151,8 @@ GameObject:
   - component: {fileID: 648647243}
   - component: {fileID: 648647242}
   - component: {fileID: 648647245}
+  - component: {fileID: 648647246}
+  - component: {fileID: 648647247}
   m_Layer: 0
   m_Name: Ignition Powerup
   m_TagString: PickupItem
@@ -1251,10 +1255,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf076aecc5fffa449825feaaaf4ae81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quantity: 1
-  type: 1
+  type: 0
+  part: 0
+  name: 
+  quantity: 0
+--- !u!114 &648647246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 648647241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ece3ec9a0addbc48905fb43c457fd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 0
+  changeElementOnTouch: 0
+  waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
+  fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
+  lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
+  fireWaterMaterial: {fileID: 2100000, guid: 40adbdf1333702b42a73bc1de02c05b0, type: 2}
+  waterLightningMaterial: {fileID: 2100000, guid: 1ad43559ec8572049af7ed4ab3bfb2fc,
+    type: 2}
+  fireLightningMaterial: {fileID: 2100000, guid: 27bee8ee76c1f194a805b766269245ab,
+    type: 2}
+  fireWaterLightningMaterial: {fileID: 2100000, guid: a66fb5b581838614dad24dbd6acb02ff,
+    type: 2}
+  elementChangedBy: {fileID: 0}
+--- !u!114 &648647247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 648647241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68938c3efe43844f979282a9e05b784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
   part: 0
   name: Ignite
+  quantity: 1
 --- !u!1001 &670049257
 Prefab:
   m_ObjectHideFlags: 0
@@ -1715,6 +1758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 0
+  changeElementOnTouch: 0
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
@@ -1815,6 +1859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 0
+  changeElementOnTouch: 0
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}

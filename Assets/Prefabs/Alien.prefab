@@ -39,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1639944856338806}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.330185, y: -107.83059, z: 0}
+  m_LocalPosition: {x: -30.644709, y: -40.97376, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 4
+  changeElementOnTouch: 1
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}

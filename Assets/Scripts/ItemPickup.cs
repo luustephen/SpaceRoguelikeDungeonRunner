@@ -11,7 +11,6 @@ public class ItemPickup : MonoBehaviour {
 	void Start () {
         if ((entityInventory = gameObject.GetComponent<Inventory>())) //If there is no inventory, dont pick stuff up
             this.enabled = false;
-           
 	}
 	
 	// Update is called once per frame

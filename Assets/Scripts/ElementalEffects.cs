@@ -26,7 +26,10 @@ public class ElementalEffects : MonoBehaviour {
     public const int FIRELIGHTNING = 5;
     public const int FIREWATERLIGHTNING = 7;
 
+    [Tooltip("ELEMENTLESS = 0 , FIRE = 4 , WATER = 2 , LIGHTNING = 1 , FIREWATER = 6 , WATERLIGHTNING = 3 , FIRELIGHTNING = 5 , FIREWATERLIGHTNING = 7")]
     public int element = 0; //What element does this object start at
+    [Tooltip("Does this object change elements when touching another object")]
+    public bool changeElementOnTouch = false; //Should this object change/combine elements on touching another object with a different element
 
     private Material originalMaterial;
     public Material waterMaterial;
@@ -116,20 +119,26 @@ public class ElementalEffects : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ElementalEffects otherElementScript;
-        if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
+        if (changeElementOnTouch)
         {
-            AddElement(otherElementScript.element);
-            elementChangedBy = collision.gameObject;
+            if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
+            {
+                AddElement(otherElementScript.element);
+                elementChangedBy = collision.gameObject;
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ElementalEffects otherElementScript;
-        if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
+        if (changeElementOnTouch)
         {
-            AddElement(otherElementScript.element);
-            elementChangedBy = collision.gameObject;
+            if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
+            {
+                AddElement(otherElementScript.element);
+                elementChangedBy = collision.gameObject;
+            }
         }
     }
 

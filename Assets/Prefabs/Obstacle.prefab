@@ -113,6 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   element: 4
+  changeElementOnTouch: 1
   waterMaterial: {fileID: 2100000, guid: 2aa998bc7c9ae0943a9f440a10fd5045, type: 2}
   fireMaterial: {fileID: 2100000, guid: dda203e67f71677419e0aa778a5c2092, type: 2}
   lightningMaterial: {fileID: 2100000, guid: da9d42bfc1232d14ab49fd909bc007ef, type: 2}
@@ -123,6 +124,7 @@ MonoBehaviour:
     type: 2}
   fireWaterLightningMaterial: {fileID: 2100000, guid: a66fb5b581838614dad24dbd6acb02ff,
     type: 2}
+  elementChangedBy: {fileID: 0}
 --- !u!212 &212989187867608440
 SpriteRenderer:
   m_ObjectHideFlags: 1
