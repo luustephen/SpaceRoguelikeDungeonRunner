@@ -15,7 +15,7 @@ public class Inventory : MonoBehaviour {
 	void Update () {
         foreach(Item eachItem in itemInventory)
         {
-            print(eachItem.name);
+            print(eachItem);
             eachItem.UseItem();
         }
 	}

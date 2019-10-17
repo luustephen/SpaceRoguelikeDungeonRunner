@@ -11,6 +11,7 @@ public class FireKnifeScript : Item {
 	// Use this for initialization
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
+
         foreach (Transform child in player.transform)
         {
             if(child.tag == "Player Attack")
@@ -24,17 +25,18 @@ public class FireKnifeScript : Item {
 	
 	// Update is called once per frame
 	void Update () {
-        if(type == PASSIVE)
-        {
-            UseItem();
-        }
+
 	}
 
-    public new void UseItem()
+    public override void UseItem()
     {
         if (elementScript != null)
         {
             elementScript.element = elementScript.element | FIRE;
+            elementScript.elementChangedBy = gameObject;
+            print("AYAYA");
         }
     }
+
+
 }

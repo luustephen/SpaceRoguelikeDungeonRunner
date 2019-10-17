@@ -46,7 +46,6 @@ public class Item : MonoBehaviour {
     };
     public Type type;
     public Part part;
-    public string name = "";
     public int quantity;
 
 
@@ -60,8 +59,9 @@ public class Item : MonoBehaviour {
 		
 	}
 
-    public void UseItem()
+    public virtual void UseItem()
     {
 
     }
+
 }

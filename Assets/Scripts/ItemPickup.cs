@@ -22,7 +22,7 @@ public class ItemPickup : MonoBehaviour {
     {
         if(collision.tag == "PickupItem" && (pickedItem = collision.GetComponent<Item>()))
         {
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false);
             entityInventory.Add(pickedItem);
         }
     }
