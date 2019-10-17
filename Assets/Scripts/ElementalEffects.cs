@@ -119,7 +119,7 @@ public class ElementalEffects : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ElementalEffects otherElementScript;
-        if (changeElementOnTouch)
+        if (changeElementOnTouch && gameObject)
         {
             if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
             {
@@ -132,7 +132,7 @@ public class ElementalEffects : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ElementalEffects otherElementScript;
-        if (changeElementOnTouch)
+        if (changeElementOnTouch && gameObject)
         {
             if (otherElementScript = collision.gameObject.GetComponent<ElementalEffects>())
             {

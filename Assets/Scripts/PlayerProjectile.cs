@@ -15,8 +15,8 @@ public class PlayerProjectile : MonoBehaviour {
 	}
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node")
+    {//Anything that projectiles shouldn't interact with
+        if(collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
         {
             print(collision.gameObject.tag);
             Destroy(gameObject);
