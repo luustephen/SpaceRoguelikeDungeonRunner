@@ -4,6 +4,30 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour {
 
+    /*ELEMENTAL TLDR
+ * Fire Water Lightning
+ * FWL
+ * 000 = 0 = None
+ * 100 = 4 = Fire
+ * 010 = 2 = Water
+ * 001 = 1 = Lightning
+ * 110 = 6 = Steam
+ * 101 = 5 = Fiery Lightning
+ * 011 = 3 = Water Lightning
+ * 111 = 7 = Storm?
+ * 
+ * 
+ * */
+
+    public const int ELEMENTLESS = 0;
+    public const int FIRE = 4;
+    public const int WATER = 2;
+    public const int LIGHTNING = 1;
+    public const int FIREWATER = 6;
+    public const int WATERLIGHTNING = 3;
+    public const int FIRELIGHTNING = 5;
+    public const int FIREWATERLIGHTNING = 7;
+
     public KeyCode primaryAttack, secondaryAttack;
     private bool primaryOnCooldown, secondaryOnCooldown;
     public float primaryAttackCooldown, secondaryAttackCooldown;
@@ -18,6 +42,8 @@ public class PlayerAttack : MonoBehaviour {
     public Rigidbody2D projectileInstance;
     private Camera mainCamera;
     public float projectileSpeed = 1000;
+    public int projectileElement = ELEMENTLESS;
+    public GameObject projectileElementChangedBy; 
 
 
     // Use this for initialization
@@ -65,6 +91,10 @@ public class PlayerAttack : MonoBehaviour {
             {
                 Vector3 mousePosition = Input.mousePosition;
                 projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
+
+                if(projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
+                    projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
+
                 float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);

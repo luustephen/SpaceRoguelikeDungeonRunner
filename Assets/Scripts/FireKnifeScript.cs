@@ -9,7 +9,8 @@ public class FireKnifeScript : Item {
     private GameObject player;
 
 	// Use this for initialization
-	void Start () {
+	void Start () //Get player attack object and element attached to it
+    { 
         player = GameObject.FindGameObjectWithTag("Player");
 
         foreach (Transform child in player.transform)
@@ -28,7 +29,7 @@ public class FireKnifeScript : Item {
 
 	}
 
-    public override void UseItem()
+    public override void UseItem() //Set player basic attack to fire
     {
         if (elementScript != null)
         {
