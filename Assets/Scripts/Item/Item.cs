@@ -46,7 +46,7 @@ public class Item : MonoBehaviour {
     };
     public Type type;
     public Part part;
-    public int quantity;
+    public int quantity = 1;
 
 
     // Use this for initialization

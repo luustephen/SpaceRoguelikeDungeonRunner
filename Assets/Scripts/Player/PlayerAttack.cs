@@ -43,7 +43,9 @@ public class PlayerAttack : MonoBehaviour {
     private Camera mainCamera;
     public float projectileSpeed = 1000;
     public int projectileElement = ELEMENTLESS;
-    public GameObject projectileElementChangedBy; 
+    public GameObject projectileElementChangedBy;
+    private int numShots = 1; //Number of shots per click + 1 (cause im an idiot)
+    private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
 
 
     // Use this for initialization
@@ -70,49 +72,60 @@ public class PlayerAttack : MonoBehaviour {
     {
         if (Input.GetKeyDown(primaryAttack))            //Move hitbox into swinging position and enable it
         {
-            if (!primaryOnCooldown && !secondaryOnCooldown)
-            {
-                primaryOnCooldown = true;
-                Vector3 mousePosition = Input.mousePosition;
-                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
-                float y = Mathf.Sin(angle);
-                float x = Mathf.Cos(angle);
-                attackHitbox.Translate(new Vector3(x, y, 0));
-                attackHitbox.Rotate(new Vector3(0 ,0, Mathf.Rad2Deg * angle + 90));
-                attackSprite.enabled = true;
-                attackCollider.enabled = true;
-                StartCoroutine("PrimaryCooldown", angle);
-            }
+            PrimaryAttack();
         }
 
         if (Input.GetKeyDown(secondaryAttack))          //Start cooldown on secondary attack
         {
-            if (!secondaryOnCooldown && !primaryOnCooldown)
-            {
-                Vector3 mousePosition = Input.mousePosition;
-                projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
-
-                if(projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
-                    projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
-
-                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
-                float y = Mathf.Sin(angle);
-                float x = Mathf.Cos(angle);
-                projectileInstance.AddForce(new Vector3(x, y, 0) * projectileSpeed);
-                projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
-
-                secondaryOnCooldown = true; 
-                //secondaryattackSprite.enabled = true;
-                //secondaryattackspriteCollider.enabled = true;
-                //projectile.GetComponent<Rigidbody>().transform
-                //projectile.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
-
-                //rigidBody.useGravity = true;
-                //rigidBody.MovePosition(mousePosition);
-                StartCoroutine("SecondaryCooldown");
-            }
+            SecondaryAttack(numShots-1); //Compensation for bad programming, see numShots description
         }
     }
+
+    public void PrimaryAttack()
+    {
+        if (!primaryOnCooldown && !secondaryOnCooldown)
+        {
+            primaryOnCooldown = true;
+            Vector3 mousePosition = Input.mousePosition;
+            float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+            float y = Mathf.Sin(angle);
+            float x = Mathf.Cos(angle);
+            attackHitbox.Translate(new Vector3(x, y, 0));
+            attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+            attackSprite.enabled = true;
+            attackCollider.enabled = true;
+            StartCoroutine(PrimaryCooldown(angle));
+        }
+    }
+
+    public void SecondaryAttack(int shotsLeft)
+    {
+        if (!secondaryOnCooldown && !primaryOnCooldown || followUpShot)
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
+
+            if (projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
+                projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
+
+            float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+            float y = Mathf.Sin(angle);
+            float x = Mathf.Cos(angle);
+            projectileInstance.AddForce(new Vector3(x, y, 0) * projectileSpeed);
+            projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+
+            secondaryOnCooldown = true;
+            //secondaryattackSprite.enabled = true;
+            //secondaryattackspriteCollider.enabled = true;
+            //projectile.GetComponent<Rigidbody>().transform
+            //projectile.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+
+            //rigidBody.useGravity = true;
+            //rigidBody.MovePosition(mousePosition);
+            StartCoroutine(SecondaryCooldown(shotsLeft));
+        }
+    }
+
 
     IEnumerator PrimaryCooldown(float angle)            //Wait for attack to end then move hitbox back and disable it
     {
@@ -133,9 +146,24 @@ public class PlayerAttack : MonoBehaviour {
         primaryOnCooldown = false;
     }
 
-    IEnumerator SecondaryCooldown()
+    IEnumerator SecondaryCooldown(int shotsLeft)
     {
         yield return new WaitForSeconds(secondaryAttackCooldown);
-        secondaryOnCooldown = false;
+
+        if (shotsLeft == 0)
+        {
+            followUpShot = false;
+            secondaryOnCooldown = false;
+        }
+        else
+        {
+            followUpShot = true;
+            SecondaryAttack(shotsLeft - 1);
+        }
+    }
+
+    public void IncrementShots()
+    {
+        numShots++;
     }
 }
