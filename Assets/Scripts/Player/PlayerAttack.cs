@@ -44,8 +44,10 @@ public class PlayerAttack : MonoBehaviour {
     public float projectileSpeed = 1000;
     public int projectileElement = ELEMENTLESS;
     public GameObject projectileElementChangedBy;
-    private int numShots = 1; //Number of shots per click + 1 (cause im an idiot)
+    private int numShots = 1; //Number of shots per click 
+    private int numProjectilesPerShot = 1; //Number of projectiles fired per click
     private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
+    private float spread = Mathf.PI / 12; //Degrees of spread on split shot in radians (60 degrees)
 
 
     // Use this for initialization
@@ -75,9 +77,9 @@ public class PlayerAttack : MonoBehaviour {
             PrimaryAttack();
         }
 
-        if (Input.GetKeyDown(secondaryAttack))          //Start cooldown on secondary attack
+        if (Input.GetKeyDown(secondaryAttack))          //Fire projectile and start cooldown on secondary attack
         {
-            SecondaryAttack(numShots-1); //Compensation for bad programming, see numShots description
+            SecondaryAttack(numShots); 
         }
     }
 
@@ -100,19 +102,30 @@ public class PlayerAttack : MonoBehaviour {
 
     public void SecondaryAttack(int shotsLeft)
     {
-        if (!secondaryOnCooldown && !primaryOnCooldown || followUpShot)
+        if (!secondaryOnCooldown && !primaryOnCooldown || (followUpShot && numShots > 0)) //Fire if primary/secondary attacks are not on cooldown or if followup shot is the one being fired
         {
             Vector3 mousePosition = Input.mousePosition;
-            projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
+            float radIncrement = spread / (numProjectilesPerShot); //Degrees apart each shot should be from another if firing multiple projectiles
 
-            if (projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
-                projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
+            for (int i = 0; i < numProjectilesPerShot; i++)
+            {
+                projectileInstance = Instantiate(projectilePrefab, attackHitbox.position, Quaternion.identity) as Rigidbody2D;
 
-            float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
-            float y = Mathf.Sin(angle);
-            float x = Mathf.Cos(angle);
-            projectileInstance.AddForce(new Vector3(x, y, 0) * projectileSpeed);
-            projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+                if (projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
+                    projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
+
+                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+
+                if(numProjectilesPerShot > 1) //If we shoot more than one projectile, offset their angle and direction fired by the number of shots
+                    angle = angle - (spread/2) + (radIncrement*(i+1));
+
+                float y = Mathf.Sin(angle);
+                float x = Mathf.Cos(angle);
+                print("i: " + i + " Angle: " + Mathf.Rad2Deg*angle + " RadIncrement: " + Mathf.Rad2Deg * radIncrement);
+                projectileInstance.AddForce(new Vector3(x , y, 0) * projectileSpeed);
+                projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+
+            }
 
             secondaryOnCooldown = true;
             //secondaryattackSprite.enabled = true;
@@ -122,7 +135,7 @@ public class PlayerAttack : MonoBehaviour {
 
             //rigidBody.useGravity = true;
             //rigidBody.MovePosition(mousePosition);
-            StartCoroutine(SecondaryCooldown(shotsLeft));
+            StartCoroutine(SecondaryCooldown(shotsLeft-1));
         }
     }
 
@@ -158,12 +171,27 @@ public class PlayerAttack : MonoBehaviour {
         else
         {
             followUpShot = true;
-            SecondaryAttack(shotsLeft - 1);
+            SecondaryAttack(shotsLeft);
         }
     }
 
     public void IncrementShots()
     {
         numShots++;
+    }
+
+    public void DecrementShots()
+    {
+        numShots--;
+    }
+
+    public void IncrementProjectilesPerShot()
+    {
+        numProjectilesPerShot++;
+    }
+
+    public void DecrementProjectilesPerShot()
+    {
+        numProjectilesPerShot--;
     }
 }
