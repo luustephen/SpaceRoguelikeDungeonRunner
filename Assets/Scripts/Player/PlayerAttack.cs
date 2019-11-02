@@ -47,7 +47,7 @@ public class PlayerAttack : MonoBehaviour {
     private int numShots = 1; //Number of shots per click 
     private int numProjectilesPerShot = 1; //Number of projectiles fired per click
     private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
-    private float spread = Mathf.PI / 12; //Degrees of spread on split shot in radians (60 degrees)
+    private float spread = Mathf.PI / 6; //Degrees of spread on split shot in radians (60 degrees)
 
 
     // Use this for initialization
@@ -105,7 +105,7 @@ public class PlayerAttack : MonoBehaviour {
         if (!secondaryOnCooldown && !primaryOnCooldown || (followUpShot && numShots > 0)) //Fire if primary/secondary attacks are not on cooldown or if followup shot is the one being fired
         {
             Vector3 mousePosition = Input.mousePosition;
-            float radIncrement = spread / (numProjectilesPerShot); //Degrees apart each shot should be from another if firing multiple projectiles
+            float radIncrement = spread / numProjectilesPerShot; //Degrees apart each shot should be from another if firing multiple projectiles
 
             for (int i = 0; i < numProjectilesPerShot; i++)
             {
@@ -116,8 +116,10 @@ public class PlayerAttack : MonoBehaviour {
 
                 float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
 
-                if(numProjectilesPerShot > 1) //If we shoot more than one projectile, offset their angle and direction fired by the number of shots
-                    angle = angle - (spread/2) + (radIncrement*(i+1));
+                if(numProjectilesPerShot > 1 && numProjectilesPerShot%2 == 1) //If we shoot more than one projectile, offset their angle and direction fired by the number of shots
+                    angle = angle - spread + (radIncrement * (i+1)) + (radIncrement*(numProjectilesPerShot/2)); //There is a different formula for even/odd number of projectiles
+                else if(numProjectilesPerShot > 1 && numProjectilesPerShot % 2 == 0)
+                    angle = angle - spread + (radIncrement * (i+1)) + ((radIncrement/2)*(numProjectilesPerShot/2)); //TODO maybe fix this formula up later, seems way to complex for what it does
 
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);
@@ -128,13 +130,6 @@ public class PlayerAttack : MonoBehaviour {
             }
 
             secondaryOnCooldown = true;
-            //secondaryattackSprite.enabled = true;
-            //secondaryattackspriteCollider.enabled = true;
-            //projectile.GetComponent<Rigidbody>().transform
-            //projectile.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
-
-            //rigidBody.useGravity = true;
-            //rigidBody.MovePosition(mousePosition);
             StartCoroutine(SecondaryCooldown(shotsLeft-1));
         }
     }
