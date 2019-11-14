@@ -123,7 +123,7 @@ public class PlayerAttack : MonoBehaviour {
 
                 float y = Mathf.Sin(angle);
                 float x = Mathf.Cos(angle);
-                print("i: " + i + " Angle: " + Mathf.Rad2Deg*angle + " RadIncrement: " + Mathf.Rad2Deg * radIncrement);
+                //print("i: " + i + " Angle: " + Mathf.Rad2Deg*angle + " RadIncrement: " + Mathf.Rad2Deg * radIncrement);
                 projectileInstance.AddForce(new Vector3(x , y, 0) * projectileSpeed);
                 projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
 

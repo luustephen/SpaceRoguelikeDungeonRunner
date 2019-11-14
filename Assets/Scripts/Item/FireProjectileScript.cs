@@ -28,7 +28,6 @@ public class FireProjectileScript : Item
         {
             playerAttackScript.projectileElement = playerAttackScript.projectileElement | FIRE;
             playerAttackScript.projectileElementChangedBy = gameObject;
-            print("AYAYA");
         }
     }
 }

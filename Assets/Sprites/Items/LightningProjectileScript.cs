@@ -28,7 +28,6 @@ public class LightningProjectileScript : Item
         {
             playerAttackScript.projectileElement = playerAttackScript.projectileElement | LIGHTNING;
             playerAttackScript.projectileElementChangedBy = gameObject;
-            print("AYAYA");
         }
     }
 }

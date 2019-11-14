@@ -28,7 +28,6 @@ public class WaterProjectileScript : Item
         {
             playerAttackScript.projectileElement = playerAttackScript.projectileElement | WATER;
             playerAttackScript.projectileElementChangedBy = gameObject;
-            print("AYAYA");
         }
     }
 }
