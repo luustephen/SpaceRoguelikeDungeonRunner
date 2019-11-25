@@ -130,8 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c627c39d3fadd441b797e2d6052713b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radiusOfLockOn: 5
-  forceOfLockOn: 10
+  radiusOfLockOn: 4
+  forceOfLockOn: 50
 --- !u!61 &61264078999610888
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour {
     public GameObject[] enemies; //All enemies possible
     private MapBuilder mapBuilder; //Map builder script
     private GameObject[] roomObjects; //All room objects in level
+    private GameObject[] enemiesSpawned; //All enemies currently spawned
 
     private float dimensions; //Dimensions of each room, assumes square rooms
 
@@ -16,6 +17,7 @@ public class EnemySpawner : MonoBehaviour {
         mapBuilder = GameObject.Find("MapBuilder").GetComponent<MapBuilder>();
         dimensions = mapBuilder.dimensions;
         roomObjects = mapBuilder.getAllRooms();
+        enemiesSpawned = new GameObject[roomObjects.Length];
         if (mapBuilder)
         {
             if(enemies.Length > 0)
@@ -27,7 +29,7 @@ public class EnemySpawner : MonoBehaviour {
                         int rand = Random.Range(0,enemies.Length);
                         Vector3 position = new Vector3(roomObjects[i].transform.position.x + Random.Range(0,dimensions), roomObjects[i].transform.position.y + Random.Range(- dimensions / 2, dimensions / 2), roomObjects[i].transform.position.z); //Spawn somewhere within room kinda
                         enemies[rand].transform.SetPositionAndRotation(position,Quaternion.identity);
-                        Instantiate(enemies[rand]); //spawn enemy inside room dimensions
+                        enemiesSpawned[i] = Instantiate(enemies[rand]); //spawn enemy inside room dimensions
                     }
                 }
             }
@@ -38,4 +40,9 @@ public class EnemySpawner : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public GameObject[] getEnemies()
+    {
+        return enemiesSpawned;
+    }
 }

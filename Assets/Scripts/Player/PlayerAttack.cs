@@ -93,7 +93,7 @@ public class PlayerAttack : MonoBehaviour {
             float y = Mathf.Sin(angle);
             float x = Mathf.Cos(angle);
             attackHitbox.Translate(new Vector3(x, y, 0));
-            attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
+            attackHitbox.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90)); //+ 90
             attackSprite.enabled = true;
             attackCollider.enabled = true;
             StartCoroutine(PrimaryCooldown(angle));
