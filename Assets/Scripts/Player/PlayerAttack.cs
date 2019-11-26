@@ -48,6 +48,7 @@ public class PlayerAttack : MonoBehaviour {
     private int numProjectilesPerShot = 1; //Number of projectiles fired per click
     private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
     private float spread = Mathf.PI / 6; //Degrees of spread on split shot in radians (60 degrees)
+    private bool isHoming = false; //do shots home onto targets
 
 
     // Use this for initialization
@@ -127,6 +128,12 @@ public class PlayerAttack : MonoBehaviour {
                 projectileInstance.AddForce(new Vector3(x , y, 0) * projectileSpeed);
                 projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
 
+                PlayerProjectile projectileScript = projectileInstance.GetComponent<PlayerProjectile>();
+                if (isHoming && projectileScript != null)
+                {
+                    projectileScript.SetHomingShots(true);
+                }
+
             }
 
             secondaryOnCooldown = true;
@@ -188,5 +195,15 @@ public class PlayerAttack : MonoBehaviour {
     public void DecrementProjectilesPerShot()
     {
         numProjectilesPerShot--;
+    }
+
+    public void SetHomingShots(bool value)
+    {
+        isHoming = value;
+    }
+
+    public bool hasHomingShots()
+    {
+        return isHoming;
     }
 }

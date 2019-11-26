@@ -8,6 +8,7 @@ public class PlayerProjectile : MonoBehaviour {
     public float forceOfLockOn = 10;
     private Rigidbody2D rb;
     private EnemySpawner enemySpawnScript;
+    private bool isHoming = false;
 
 	// Use this for initialization
 	void Start () {
@@ -34,15 +35,17 @@ public class PlayerProjectile : MonoBehaviour {
         //print("rotation : " + transform.rotation.eulerAngles.z);
         //print(transform.rotation.eulerAngles.z - angleOfVelocity);
 
-
-        GameObject[] allEnemies = enemySpawnScript.getEnemies();
-        for(int i = 0; i < allEnemies.Length; i++) //Find nearest enemy and home onto it
+        if (isHoming)
         {
-            if (allEnemies[i] != null && Mathf.Abs(allEnemies[i].transform.position.y - transform.position.y) < radiusOfLockOn && Mathf.Abs(allEnemies[i].transform.position.x - transform.position.x) < radiusOfLockOn)
+            GameObject[] allEnemies = enemySpawnScript.getEnemies();
+            for (int i = 0; i < allEnemies.Length; i++) //Find nearest enemy and home onto it
             {
-                rb.AddForce((allEnemies[i].transform.position - transform.position) * forceOfLockOn);
-                transform.Rotate(new Vector3(0, 0, angleOfVelocity - transform.rotation.eulerAngles.z)); //Rotate the projectile to match the movement of any homing targets
-                continue;
+                if (allEnemies[i] != null && Mathf.Abs(allEnemies[i].transform.position.y - transform.position.y) < radiusOfLockOn && Mathf.Abs(allEnemies[i].transform.position.x - transform.position.x) < radiusOfLockOn)
+                {
+                    rb.AddForce((allEnemies[i].transform.position - transform.position) * forceOfLockOn);
+                    transform.Rotate(new Vector3(0, 0, angleOfVelocity - transform.rotation.eulerAngles.z)); //Rotate the projectile to match the movement of any homing targets
+                    continue;
+                }
             }
         }
 
@@ -55,5 +58,15 @@ public class PlayerProjectile : MonoBehaviour {
             print(collision.gameObject.tag);
             Destroy(gameObject);
         }
+    }
+
+    public void SetHomingShots(bool value)
+    {
+        isHoming = value;
+    }
+
+    public bool hasHomingShots()
+    {
+        return isHoming;
     }
 }
