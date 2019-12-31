@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterKnifeScript : Item {
-
+public class IncreasedRangePowerupScript : Item
+{
     private ElementalEffects elementScript;
     private GameObject playerWeapon;
+    private BoxCollider2D playerWeaponHitbox;
     private GameObject player;
+    public float sizeIncrease = 1.3f;
+    private bool firstpass = true;
 
     // Use this for initialization
     void Start()
@@ -18,7 +21,7 @@ public class WaterKnifeScript : Item {
             if (child.tag == "Player Attack")
             {
                 playerWeapon = child.gameObject;
-                elementScript = child.GetComponent<ElementalEffects>();
+                playerWeaponHitbox = playerWeapon.GetComponent<BoxCollider2D>();
             }
         }
 
@@ -32,10 +35,11 @@ public class WaterKnifeScript : Item {
 
     public override void UseItem()
     {
-        if (elementScript != null)
+        if (playerWeapon != null && firstpass)
         {
-            elementScript.element = elementScript.element | WATER;
-            elementScript.elementChangedBy = gameObject;
+            playerWeapon.transform.localScale = playerWeapon.transform.localScale * sizeIncrease;
+            playerWeaponHitbox.size = playerWeaponHitbox.size * sizeIncrease;
+            firstpass = !firstpass;
         }
     }
 }
