@@ -41,9 +41,15 @@ public class ElementalEffects : MonoBehaviour {
     public Material fireWaterLightningMaterial;
     private SpriteRenderer sprite;
     public GameObject elementChangedBy;
+    private bool isPlayer = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
+        if(GameObject.FindGameObjectWithTag("Player") == gameObject)
+        {
+            isPlayer = true;
+            print("found " + gameObject);
+        }
         sprite = gameObject.GetComponent<SpriteRenderer>();
         originalMaterial = sprite.material;
         if (element == ELEMENTLESS)
@@ -118,6 +124,9 @@ public class ElementalEffects : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isPlayer && collision.tag == "Player Attack") //Player projectile won't ignite player
+            return;
+
         ElementalEffects otherElementScript;
         if (changeElementOnTouch && gameObject)
         {
@@ -131,6 +140,9 @@ public class ElementalEffects : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isPlayer && collision.gameObject.tag == "Player Attack") //Player projectile won't ignite player
+            return;
+
         ElementalEffects otherElementScript;
         if (changeElementOnTouch && gameObject)
         {
