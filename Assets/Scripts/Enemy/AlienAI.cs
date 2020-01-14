@@ -26,8 +26,6 @@ public class AlienAI : MonoBehaviour
     public float howCloseToGet = .5f; //How close to get to each node before moving to next
     private bool modifyMovement = false; //Whether the enemy has gotten stuck on an object, try to move elsewhere;
     private ContactPoint2D contactPoint; //If enemy hits something, this is where it hit it
-    private bool dontGoUpDown = false;
-    private bool dontGoLeftRight = false;
 
     // Use this for initialization
     void Start()
@@ -212,8 +210,6 @@ public class AlienAI : MonoBehaviour
             else
             {
                 transform.Translate(normalizedDirection * speed);
-                dontGoUpDown = false;
-                dontGoLeftRight = false;
                 //print(nodeToMove.transform.position + "!!");
             }
             //print(nodeToMove.transform.localPosition + "!!");

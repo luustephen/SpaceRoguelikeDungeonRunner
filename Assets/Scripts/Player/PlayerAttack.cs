@@ -49,6 +49,7 @@ public class PlayerAttack : MonoBehaviour {
     private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
     private float spread = Mathf.PI / 6; //Degrees of spread on split shot in radians (60 degrees)
     private bool isHoming = false; //do shots home onto targets
+    private float projectileWidthModifier = 1.0f;
 
 
     // Use this for initialization
@@ -134,6 +135,9 @@ public class PlayerAttack : MonoBehaviour {
                     projectileScript.SetHomingShots(true);
                 }
 
+                //Set width of projectile to the modifier
+                projectileInstance.transform.localScale = new Vector3(projectileInstance.transform.localScale.x * projectileWidthModifier, projectileInstance.transform.localScale.y, projectileInstance.transform.localScale.z);
+                print(projectileInstance.transform.localScale);
             }
 
             secondaryOnCooldown = true;
@@ -205,5 +209,10 @@ public class PlayerAttack : MonoBehaviour {
     public bool hasHomingShots()
     {
         return isHoming;
+    }
+
+    public void SetProjectileWidth(float width)
+    {
+        projectileWidthModifier = width;
     }
 }
