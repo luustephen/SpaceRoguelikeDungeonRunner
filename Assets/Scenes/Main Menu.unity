@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 15201392}
   - component: {fileID: 15201391}
   - component: {fileID: 15201390}
+  - component: {fileID: 15201394}
   m_Layer: 5
   m_Name: Quit
   m_TagString: Untagged
@@ -156,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -319.99997, y: -40}
+  m_AnchoredPosition: {x: -479, y: -40}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &15201390
@@ -261,6 +262,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15201388}
   m_CullTransparentMesh: 0
+--- !u!114 &15201394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15201388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34dafd0de37afd489d4f800d8db0e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xDistance: 200
+  yDistance: 0
+  xSpeed: 0.05
+  ySpeed: 0.05
+  waitTime: 25
 --- !u!1 &191550673
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +369,7 @@ GameObject:
   - component: {fileID: 211103563}
   - component: {fileID: 211103562}
   - component: {fileID: 211103565}
+  - component: {fileID: 211103566}
   m_Layer: 5
   m_Name: Start
   m_TagString: Untagged
@@ -374,7 +393,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -319.99997, y: 29.423233}
+  m_AnchoredPosition: {x: -479, y: 29.423233}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &211103562
@@ -479,6 +498,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eedbe63ac0766ed4ca19ece98a68a07c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &211103566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211103560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34dafd0de37afd489d4f800d8db0e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xDistance: 200
+  yDistance: 0
+  xSpeed: 0.05
+  ySpeed: 0.05
+  waitTime: 0
 --- !u!1 &273805664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,7 +1598,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1732015104}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
