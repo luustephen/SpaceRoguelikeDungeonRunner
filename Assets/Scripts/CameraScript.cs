@@ -23,7 +23,7 @@ public class CameraScript : MonoBehaviour {
 	void Update () {
         if (firstpass)
         {
-            rooms = mapScript.getAllRooms();
+            rooms = mapScript.GetAllRooms();
             firstpass = false;
         }
         focusRoom = false;

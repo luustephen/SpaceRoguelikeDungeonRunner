@@ -16,7 +16,7 @@ public class EnemySpawner : MonoBehaviour {
 	void Start () {
         mapBuilder = GameObject.Find("MapBuilder").GetComponent<MapBuilder>();
         dimensions = mapBuilder.dimensions;
-        roomObjects = mapBuilder.getAllRooms();
+        roomObjects = mapBuilder.GetAllRooms();
         enemiesSpawned = new GameObject[roomObjects.Length];
         if (mapBuilder)
         {
