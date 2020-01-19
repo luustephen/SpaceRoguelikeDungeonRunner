@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NextLevelScript : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class NextLevelScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(endingRoomPosition);
+        SceneManager.LoadScene("Planet Surface");
     }
 
 }
