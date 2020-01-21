@@ -15,12 +15,18 @@ public class NextLevelScript : MonoBehaviour
         mapBuilder = GameObject.Find("MapBuilder").GetComponent<MapBuilder>();
         endingRoomPosition = mapBuilder.GetEndingRoom().transform.position;
         transform.Translate(endingRoomPosition-transform.position);
+        transform.Translate(new Vector3(mapBuilder.dimensions/2,0,0));//Put it into the last room in the middle
     }
 
     // Update is called once per frame
     void Update()
     {
-        SceneManager.LoadScene("Planet Surface");
+
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Player")
+            SceneManager.LoadScene("Planet Surface"); //Next level
+    }
 }

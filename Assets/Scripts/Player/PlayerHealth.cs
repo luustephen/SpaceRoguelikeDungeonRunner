@@ -5,6 +5,30 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
+    /*ELEMENTAL TLDR
+* Fire Water Lightning
+* FWL
+* 000 = 0 = None
+* 100 = 4 = Fire
+* 010 = 2 = Water
+* 001 = 1 = Lightning
+* 110 = 6 = Steam
+* 101 = 5 = Fiery Lightning
+* 011 = 3 = Water Lightning
+* 111 = 7 = Storm?
+* 
+* 
+* */
+
+    public const int ELEMENTLESS = 0;
+    public const int FIRE = 4;
+    public const int WATER = 2;
+    public const int LIGHTNING = 1;
+    public const int FIREWATER = 6;
+    public const int WATERLIGHTNING = 3;
+    public const int FIRELIGHTNING = 5;
+    public const int FIREWATERLIGHTNING = 7;
+
     public int startingHealth = 100;
     public int currentHealth;
     public Slider healthSlider;
@@ -19,6 +43,8 @@ public class PlayerHealth : MonoBehaviour {
     public float knockbackTime = .3f;
     public float knockbackForce = 5;
     private PlayerMovement movementScript;
+    private bool isBurning = false;
+    private ElementalEffects elementScript;
 
     Animator anim;
     PlayerMovement playerMovement;
@@ -30,14 +56,20 @@ public class PlayerHealth : MonoBehaviour {
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
         currentHealth = startingHealth;
-        sprite = gameObject.GetComponent<SpriteRenderer>();
+        sprite = GetComponent<SpriteRenderer>();
         originalMaterial = sprite.material;
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        movementScript = gameObject.GetComponent<PlayerMovement>();
+        rigidbody = GetComponent<Rigidbody2D>();
+        movementScript = GetComponent<PlayerMovement>();
+        elementScript = GetComponent<ElementalEffects>(); //Pick up the element of the player
     }
 
     void Update()
     {
+        if ((elementScript.element & FIRE) == FIRE && !isBurning)
+        {
+            isBurning = true;
+            StartCoroutine(Burn(3, 5));
+        }
         if (Input.GetKey(KeyCode.K))
         {
             this.TakeDamage(5);
@@ -101,5 +133,20 @@ public class PlayerHealth : MonoBehaviour {
         rigidbody.AddForce(knockbackForce*knockbackDirection, ForceMode2D.Impulse);
         rigidbody.velocity = Vector2.zero;
         rigidbody.angularVelocity = 0;
+    }
+
+    IEnumerator Burn(float time, int tickDmg)                //Slowly take health from player until burn subsides
+    {
+        if (time > 0)
+        {
+            while (time-- > 0)
+            {
+                currentHealth = currentHealth - tickDmg;
+                print(currentHealth);
+                yield return new WaitForSeconds(1);
+            }
+        }
+        isBurning = false;
+        elementScript.element = elementScript.element & 3; //Remove fire
     }
 }

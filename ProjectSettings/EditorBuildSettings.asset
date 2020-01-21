@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Alien Spaceship.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Planet Surface.unity
+    guid: 32c12678d01612045a89eb46ea9f6acc
   m_configObjects: {}
