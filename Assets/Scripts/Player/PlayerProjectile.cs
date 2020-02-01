@@ -9,9 +9,16 @@ public class PlayerProjectile : MonoBehaviour {
     private Rigidbody2D rb;
     private EnemySpawner enemySpawnScript;
     private bool isHoming = false;
+    private int maxBounces = 1; //Number of times a projectile can hit a wall
+    private int numBounces = 0;
+    private GameObject previousObjectHit; //Previous object interacted with
+    private GameObject player;
+    private Vector2 previousVelocity;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
+        player = GameObject.FindGameObjectWithTag("Player");
+        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), player.GetComponent<BoxCollider2D>());
         rb = GetComponent<Rigidbody2D>();
         enemySpawnScript = FindObjectOfType<EnemySpawner>();
 	}
@@ -19,6 +26,7 @@ public class PlayerProjectile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        previousVelocity = rb.velocity;
         Vector2 velocity = rb.velocity;
         float angleOfVelocity;
 
@@ -51,14 +59,57 @@ public class PlayerProjectile : MonoBehaviour {
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
+        {
+            if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
+            {
+                print(previousObjectHit);
+                Destroy(gameObject);
+            }
+
+            numBounces++;
+            //Vector2 previousVelocity = rb.velocity * rb.velocity.magnitude; //Store and stop the object's velocity
+            rb.Sleep();
+
+            ContactPoint2D contactPoint = collision.GetContact(0);
+            Vector2 newVelocity = previousVelocity - (2 * Vector2.Dot(previousVelocity,contactPoint.normal) * contactPoint.normal); //Find reflection vector
+
+            previousObjectHit = collision.gameObject;
+
+            rb.AddForce(newVelocity * previousVelocity.magnitude); //Bounce off the wall at reflection angle
+            float angle = Mathf.Atan2(newVelocity.y, newVelocity.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle+90, Vector3.forward);
+        }
+    }
+
+    /*private void OnTriggerEnter2D(Collider2D collision)
     {//Anything that projectiles shouldn't interact with
         if(collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
         {
-            print(collision.gameObject.tag);
-            Destroy(gameObject);
+            if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
+            {
+                Destroy(gameObject);
+            }
+
+            numBounces++;
+            Vector2 previousVelocity = rb.velocity * rb.velocity.magnitude; //Stop the object's velocity
+            rb.Sleep();
+            transform.Rotate(0,0,90); //TODO update this
+
+            if (collision.gameObject.tag == "Left Wall" || collision.gameObject.tag == "Right Wall")
+            {
+                rb.AddForce(new Vector2(-previousVelocity.x,previousVelocity.y));
+                previousObjectHit = collision.gameObject;
+            }
+            else if (collision.gameObject.tag == "Up Wall" || collision.gameObject.tag == "Down Wall")
+            {
+                rb.AddForce(new Vector2(previousVelocity.x, -previousVelocity.y));
+                previousObjectHit = collision.gameObject;
+            }
         }
-    }
+    }*/
 
     public void SetHomingShots(bool value)
     {
@@ -68,5 +119,10 @@ public class PlayerProjectile : MonoBehaviour {
     public bool hasHomingShots()
     {
         return isHoming;
+    }
+
+    public void SetBounces(int bounces)
+    {
+        maxBounces = bounces;
     }
 }

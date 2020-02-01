@@ -36,7 +36,6 @@ public class LightningKnifeScript : Item {
         {
             elementScript.element = elementScript.element | LIGHTNING;
             elementScript.elementChangedBy = gameObject;
-            print("AYAYA");
         }
     }
 }

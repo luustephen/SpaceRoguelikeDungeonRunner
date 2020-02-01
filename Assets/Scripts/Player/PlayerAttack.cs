@@ -137,7 +137,7 @@ public class PlayerAttack : MonoBehaviour {
 
                 //Set width of projectile to the modifier
                 projectileInstance.transform.localScale = new Vector3(projectileInstance.transform.localScale.x * projectileWidthModifier, projectileInstance.transform.localScale.y, projectileInstance.transform.localScale.z);
-                print(projectileInstance.transform.localScale);
+                //print(projectileInstance.transform.localScale);
             }
 
             secondaryOnCooldown = true;
