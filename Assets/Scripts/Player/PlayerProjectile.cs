@@ -9,7 +9,7 @@ public class PlayerProjectile : MonoBehaviour {
     private Rigidbody2D rb;
     private EnemySpawner enemySpawnScript;
     private bool isHoming = false;
-    private int maxBounces = 1; //Number of times a projectile can hit a wall
+    private int maxBounces = 0; //Number of times a projectile can hit a wall
     private int numBounces = 0;
     private GameObject previousObjectHit; //Previous object interacted with
     private GameObject player;
