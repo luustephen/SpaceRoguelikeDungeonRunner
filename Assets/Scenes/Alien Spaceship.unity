@@ -1129,7 +1129,7 @@ MonoBehaviour:
   projectileSpeed: 2000
   projectileElement: 0
   projectileElementChangedBy: {fileID: 0}
-  maxBounces: 4
+  maxBounces: 2
 --- !u!114 &592907206
 MonoBehaviour:
   m_ObjectHideFlags: 0

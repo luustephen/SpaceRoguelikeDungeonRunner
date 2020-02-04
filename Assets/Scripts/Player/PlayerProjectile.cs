@@ -14,10 +14,12 @@ public class PlayerProjectile : MonoBehaviour {
     private GameObject previousObjectHit; //Previous object interacted with
     private GameObject player;
     private Vector2 previousVelocity;
+    private PlayerAttack playerAttackScript;
 
     // Use this for initialization
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
+        playerAttackScript = player.GetComponent<PlayerAttack>();
         Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), player.GetComponent<BoxCollider2D>());
         rb = GetComponent<Rigidbody2D>();
         enemySpawnScript = FindObjectOfType<EnemySpawner>();
@@ -78,7 +80,7 @@ public class PlayerProjectile : MonoBehaviour {
 
             previousObjectHit = collision.gameObject;
 
-            rb.AddForce(newVelocity * previousVelocity.magnitude); //Bounce off the wall at reflection angle
+            rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
             float angle = Mathf.Atan2(newVelocity.y, newVelocity.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle+90, Vector3.forward);
         }
