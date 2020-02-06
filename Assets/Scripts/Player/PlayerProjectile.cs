@@ -15,6 +15,8 @@ public class PlayerProjectile : MonoBehaviour {
     private GameObject player;
     private Vector2 previousVelocity;
     private PlayerAttack playerAttackScript;
+    private bool shouldExplode = true;
+    private bool explodeNextFrame = false;
 
     // Use this for initialization
     void Start () {
@@ -27,6 +29,11 @@ public class PlayerProjectile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (explodeNextFrame)
+        {
+            Destroy(gameObject);
+        }
 
         previousVelocity = rb.velocity;
         Vector2 velocity = rb.velocity;
@@ -67,6 +74,13 @@ public class PlayerProjectile : MonoBehaviour {
         {
             if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
             {
+                if (shouldExplode)
+                {
+                    explodeNextFrame = true;
+                    transform.GetChild(0).GetComponent<CircleCollider2D>().enabled = true;
+                    transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+                    return;
+                }
                 print(previousObjectHit);
                 Destroy(gameObject);
             }
