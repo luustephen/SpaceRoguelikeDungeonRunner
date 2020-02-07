@@ -70,6 +70,11 @@ public class PlayerProjectile : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag == "Player Attack")
+        {
+            Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), collision.gameObject.GetComponent<BoxCollider2D>());
+        }
+
         if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
         {
             if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
@@ -97,6 +102,46 @@ public class PlayerProjectile : MonoBehaviour {
             rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
             float angle = Mathf.Atan2(newVelocity.y, newVelocity.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle+90, Vector3.forward);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player Attack")
+        {
+            Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), collision.gameObject.GetComponent<BoxCollider2D>());
+        }
+
+        if (previousObjectHit != collision.gameObject)
+        {
+            if (collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
+            {
+                if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
+                {
+                    if (shouldExplode)
+                    {
+                        explodeNextFrame = true;
+                        transform.GetChild(0).GetComponent<CircleCollider2D>().enabled = true;
+                        transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+                        return;
+                    }
+                    print(previousObjectHit);
+                    Destroy(gameObject);
+                }
+
+                numBounces++;
+                //Vector2 previousVelocity = rb.velocity * rb.velocity.magnitude; //Store and stop the object's velocity
+                rb.Sleep();
+
+                ContactPoint2D contactPoint = collision.GetContact(0);
+                Vector2 newVelocity = previousVelocity - (2 * Vector2.Dot(previousVelocity, contactPoint.normal) * contactPoint.normal); //Find reflection vector
+
+                previousObjectHit = collision.gameObject;
+
+                rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
+                float angle = Mathf.Atan2(newVelocity.y, newVelocity.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
+            }
         }
     }
 
