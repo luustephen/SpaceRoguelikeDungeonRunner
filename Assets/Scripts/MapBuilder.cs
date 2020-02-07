@@ -62,7 +62,8 @@ public class MapBuilder : MonoBehaviour
     [Tooltip("Number of rooms to reach the final room")]
     public int essentialPathLength; //Length of the initial path built, minimum rooms to travel to end the level
     [Tooltip("What room should be used as the starting room")]
-    public int startingRoom; //Index of starting room using prebuilt rooms array above
+    public int startingRoomIndex; //Index of starting room using prebuilt rooms array above
+    private Room endingRoom; //Gameobject of the ending room
 
 
 
@@ -115,7 +116,7 @@ public class MapBuilder : MonoBehaviour
         }
         essentialPath = new Room[essentialPathLength];
         allRooms = new Room[numRooms];
-        essentialPath[0] = rooms[startingRoom].Copy();
+        essentialPath[0] = rooms[startingRoomIndex].Copy();
         allRooms[0] = essentialPath[0];
 
         if (essentialPath[0].door == UP)//up
@@ -141,7 +142,10 @@ public class MapBuilder : MonoBehaviour
         if (remainingLength <= 0)
         {
             if (allRooms[essentialPathLength - 1] != null)
+            {
+                endingRoom = allRooms[essentialPathLength-1];
                 return true;
+            }
             return false;
         }
 
@@ -453,7 +457,7 @@ public class MapBuilder : MonoBehaviour
         }
     }
 
-    public GameObject[] getAllRooms()
+    public GameObject[] GetAllRooms()
     {
         GameObject[] temp;
         if (allRooms != null)
@@ -473,5 +477,10 @@ public class MapBuilder : MonoBehaviour
         {
             return null;
         }
+    }
+
+    public GameObject GetEndingRoom()
+    {
+        return endingRoom.roomObject;
     }
 }
