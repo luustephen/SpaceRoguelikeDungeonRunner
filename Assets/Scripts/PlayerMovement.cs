@@ -40,6 +40,10 @@ public class PlayerMovement : MonoBehaviour {
         float y = transform.position.y;
         float z = transform.position.z;
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            speed *= 1.5f;
+        }
         if (Input.GetKey(up) && !lockU)                   //Accelerate to max speed
         {
             if(verticalMovement <= maxSpeed)
