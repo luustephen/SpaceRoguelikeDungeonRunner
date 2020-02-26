@@ -6,6 +6,7 @@ public class PlayerProjectile : MonoBehaviour {
 
     public float radiusOfLockOn = 5;
     public float forceOfLockOn = 10;
+    public GameObject explosionObject;
     private Rigidbody2D rb;
     private EnemySpawner enemySpawnScript;
     private bool isHoming = false;
@@ -79,13 +80,13 @@ public class PlayerProjectile : MonoBehaviour {
         {
             if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
             {
-                if (shouldExplode)
+                /*if (shouldExplode)
                 {
                     explodeNextFrame = true;
                     transform.GetChild(0).GetComponent<CircleCollider2D>().enabled = true;
                     transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                     return;
-                }
+                }*/
                 print(previousObjectHit);
                 Destroy(gameObject);
             }
@@ -145,32 +146,11 @@ public class PlayerProjectile : MonoBehaviour {
         }
     }
 
-    /*private void OnTriggerEnter2D(Collider2D collision)
-    {//Anything that projectiles shouldn't interact with
-        if(collision.gameObject.tag != "Floor" && collision.gameObject.tag != "Player" && collision.gameObject.tag != "Player Attack" && collision.gameObject.tag != "Node" && collision.gameObject.tag != "PickupItem")
-        {
-            if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
-            {
-                Destroy(gameObject);
-            }
-
-            numBounces++;
-            Vector2 previousVelocity = rb.velocity * rb.velocity.magnitude; //Stop the object's velocity
-            rb.Sleep();
-            transform.Rotate(0,0,90); //TODO update this
-
-            if (collision.gameObject.tag == "Left Wall" || collision.gameObject.tag == "Right Wall")
-            {
-                rb.AddForce(new Vector2(-previousVelocity.x,previousVelocity.y));
-                previousObjectHit = collision.gameObject;
-            }
-            else if (collision.gameObject.tag == "Up Wall" || collision.gameObject.tag == "Down Wall")
-            {
-                rb.AddForce(new Vector2(previousVelocity.x, -previousVelocity.y));
-                previousObjectHit = collision.gameObject;
-            }
-        }
-    }*/
+    private void OnDestroy()
+    {
+        Instantiate(explosionObject,transform.position,Quaternion.identity);
+        print("hi");
+    }
 
     public void SetHomingShots(bool value)
     {
