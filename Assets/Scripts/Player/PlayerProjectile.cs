@@ -16,7 +16,7 @@ public class PlayerProjectile : MonoBehaviour {
     private GameObject player;
     private Vector2 previousVelocity;
     private PlayerAttack playerAttackScript;
-    private bool shouldExplode = true;
+    private bool shouldExplode = false;
     private bool explodeNextFrame = false;
 
     // Use this for initialization
@@ -80,14 +80,6 @@ public class PlayerProjectile : MonoBehaviour {
         {
             if (numBounces >= maxBounces && previousObjectHit != collision.gameObject)
             {
-                /*if (shouldExplode)
-                {
-                    explodeNextFrame = true;
-                    transform.GetChild(0).GetComponent<CircleCollider2D>().enabled = true;
-                    transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
-                    return;
-                }*/
-                print(previousObjectHit);
                 Destroy(gameObject);
             }
 
@@ -148,8 +140,8 @@ public class PlayerProjectile : MonoBehaviour {
 
     private void OnDestroy()
     {
-        Instantiate(explosionObject,transform.position,Quaternion.identity);
-        print("hi");
+        if(shouldExplode)
+            Instantiate(explosionObject,transform.position,Quaternion.identity);
     }
 
     public void SetHomingShots(bool value)
@@ -165,5 +157,10 @@ public class PlayerProjectile : MonoBehaviour {
     public void SetBounces(int bounces)
     {
         maxBounces = bounces;
+    }
+
+    public void ShouldExplode(bool isExplode)
+    {
+        shouldExplode = isExplode;
     }
 }

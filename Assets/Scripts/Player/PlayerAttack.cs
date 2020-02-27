@@ -51,6 +51,7 @@ public class PlayerAttack : MonoBehaviour {
     private bool isHoming = false; //do shots home onto targets
     private float projectileWidthModifier = 1.0f;
     public int maxBounces = 0; //Number of bounces the projectile bounces
+    private bool isExplosive = false;
 
 
     // Use this for initialization
@@ -131,14 +132,19 @@ public class PlayerAttack : MonoBehaviour {
                 projectileInstance.transform.Rotate(new Vector3(0, 0, Mathf.Rad2Deg * angle + 90));
 
                 PlayerProjectile projectileScript = projectileInstance.GetComponent<PlayerProjectile>();
-                if (isHoming && projectileScript != null) //Set homing projectile
+                if (isHoming && projectileScript != null) //Pass on homing projectile
                 {
                     projectileScript.SetHomingShots(true);
                 }
 
-                if(maxBounces > 0)
+                if(maxBounces > 0) //Pass on bounces 
                 {
                     projectileScript.SetBounces(maxBounces);
+                }
+
+                if (isExplosive) //Pass on explosive
+                {
+                    projectileScript.ShouldExplode(isExplosive);
                 }
 
                 //Set width of projectile to the modifier
@@ -225,5 +231,10 @@ public class PlayerAttack : MonoBehaviour {
     public void IncreaseBounces()
     {
         maxBounces++;
+    }
+
+    public void SetExplosiveShot(bool shouldExplode)
+    {
+        isExplosive = shouldExplode;
     }
 }
