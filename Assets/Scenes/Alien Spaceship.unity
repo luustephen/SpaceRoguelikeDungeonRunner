@@ -1130,6 +1130,7 @@ MonoBehaviour:
   projectileElement: 0
   projectileElementChangedBy: {fileID: 0}
   maxBounces: 2
+  chargeTimeFull: 1
 --- !u!114 &592907206
 MonoBehaviour:
   m_ObjectHideFlags: 0

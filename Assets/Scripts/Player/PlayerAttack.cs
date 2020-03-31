@@ -52,6 +52,9 @@ public class PlayerAttack : MonoBehaviour {
     private float projectileWidthModifier = 1.0f;
     public int maxBounces = 0; //Number of bounces the projectile bounces
     private bool isExplosive = false;
+    private bool chargeShot = true;
+    public float chargeTimeFull = 3f;
+    private float startTime = 0;
 
 
     // Use this for initialization
@@ -81,9 +84,19 @@ public class PlayerAttack : MonoBehaviour {
             PrimaryAttack();
         }
 
-        if (Input.GetKeyDown(secondaryAttack))          //Fire projectile and start cooldown on secondary attack
+        if ((Input.GetKeyDown(secondaryAttack) && !chargeShot) || (Time.time-startTime > chargeTimeFull && Input.GetKeyUp(secondaryAttack)))          //Fire projectile and start cooldown on secondary attack
         {
             SecondaryAttack(numShots); 
+        }
+        else if (chargeShot && Input.GetKey(secondaryAttack))
+        {
+            print(Time.time - startTime);
+            if(Input.GetKeyDown(secondaryAttack))
+                startTime = Time.time;
+        }
+        else
+        {
+            startTime = Time.time;
         }
     }
 
