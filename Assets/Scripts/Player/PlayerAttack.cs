@@ -40,6 +40,8 @@ public class PlayerAttack : MonoBehaviour {
     public float swingWidth;
     public Rigidbody2D projectilePrefab;
     public Rigidbody2D projectileInstance;
+    public Rigidbody2D chargeSprite;
+    private Rigidbody2D chargeSpriteInstance;
     private Camera mainCamera;
     public float projectileSpeed = 1000;
     public int projectileElement = ELEMENTLESS;
@@ -52,9 +54,9 @@ public class PlayerAttack : MonoBehaviour {
     private float projectileWidthModifier = 1.0f;
     public int maxBounces = 0; //Number of bounces the projectile bounces
     private bool isExplosive = false;
-    private bool chargeShot = true;
-    public float chargeTimeFull = 3f;
-    private float startTime = 0;
+    private bool chargeShot = false;
+    public float chargeTimeFull = .5f;
+    private float chargeTime = 0;
 
 
     // Use this for initialization
@@ -84,19 +86,23 @@ public class PlayerAttack : MonoBehaviour {
             PrimaryAttack();
         }
 
-        if ((Input.GetKeyDown(secondaryAttack) && !chargeShot) || (Time.time-startTime > chargeTimeFull && Input.GetKeyUp(secondaryAttack)))          //Fire projectile and start cooldown on secondary attack
+        if ((Input.GetKeyDown(secondaryAttack) && !chargeShot) || (Time.time-chargeTime > chargeTimeFull && Input.GetKeyUp(secondaryAttack)))          //Fire projectile and start cooldown on secondary attack
         {
             SecondaryAttack(numShots); 
         }
         else if (chargeShot && Input.GetKey(secondaryAttack))
         {
-            print(Time.time - startTime);
-            if(Input.GetKeyDown(secondaryAttack))
-                startTime = Time.time;
+            print(Time.time - chargeTime);
+            if (Input.GetKeyDown(secondaryAttack))
+            {
+                chargeTime = Time.time;
+                if (chargeSprite)
+                    chargeSpriteInstance = Instantiate(chargeSprite, attackHitbox.position, Quaternion.identity,transform);
+            }
         }
         else
         {
-            startTime = Time.time;
+            chargeTime = Time.time;
         }
     }
 
@@ -250,4 +256,20 @@ public class PlayerAttack : MonoBehaviour {
     {
         isExplosive = shouldExplode;
     }
+
+    public void SetChargeShot(bool shouldCharge)
+    {
+        chargeShot = shouldCharge;
+    }
+
+    public bool GetChargeShot()
+    {
+        return chargeShot;
+    }
+
+    public float GetChargeTime()
+    {
+        return chargeTime;
+    }
+
 }
