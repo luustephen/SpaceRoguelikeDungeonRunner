@@ -25,7 +25,6 @@ public class DestroyChargeShot : MonoBehaviour
         {
             transform.localScale = new Vector3(transform.localScale.x + sizeIncreaseNum, transform.localScale.y + sizeIncreaseNum , transform.localScale.z);
         }
-        print(playerAttackScript.GetChargeTime());
         if(playerAttackScript.GetChargeShot() && playerAttackScript.GetChargeTime() == Time.time)
         {
             Destroy(gameObject);

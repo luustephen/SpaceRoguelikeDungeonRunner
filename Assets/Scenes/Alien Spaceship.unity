@@ -1126,7 +1126,7 @@ MonoBehaviour:
     type: 3}
   projectileInstance: {fileID: 50687144104024486, guid: 2178ff31a8622bd4e9ce40a0ebe4c746,
     type: 3}
-  chargeSprite: {fileID: 2810419523200210531, guid: 64f1be178634d7746adb5011eb31c91b,
+  chargeSprite: {fileID: 6501123100637498332, guid: 64f1be178634d7746adb5011eb31c91b,
     type: 3}
   projectileSpeed: 2000
   projectileElement: 0

@@ -92,12 +92,17 @@ public class PlayerAttack : MonoBehaviour {
         }
         else if (chargeShot && Input.GetKey(secondaryAttack))
         {
-            print(Time.time - chargeTime);
             if (Input.GetKeyDown(secondaryAttack))
             {
                 chargeTime = Time.time;
                 if (chargeSprite)
-                    chargeSpriteInstance = Instantiate(chargeSprite, attackHitbox.position, Quaternion.identity,transform);
+                {
+                    float angle = GetMouseAngleToPlayer();
+                    float y = Mathf.Sin(angle);
+                    float x = Mathf.Cos(angle);
+                    chargeSpriteInstance = Instantiate(chargeSprite, attackHitbox.position, Quaternion.identity, transform);
+                    chargeSpriteInstance.transform.Translate(x, y, 0);
+                }
             }
         }
         else
@@ -111,8 +116,7 @@ public class PlayerAttack : MonoBehaviour {
         if (!primaryOnCooldown && !secondaryOnCooldown)
         {
             primaryOnCooldown = true;
-            Vector3 mousePosition = Input.mousePosition;
-            float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+            float angle = GetMouseAngleToPlayer();
             float y = Mathf.Sin(angle);
             float x = Mathf.Cos(angle);
             attackHitbox.Translate(new Vector3(x, y, 0));
@@ -137,7 +141,7 @@ public class PlayerAttack : MonoBehaviour {
                 if (projectileInstance.GetComponent<ElementalEffects>() != null) //make sure projectile can have an element
                     projectileInstance.GetComponent<ElementalEffects>().element = projectileInstance.GetComponent<ElementalEffects>().element | projectileElement;
 
-                float angle = Mathf.Atan2(mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+                float angle = GetMouseAngleToPlayer();
 
                 if(numProjectilesPerShot > 1 && numProjectilesPerShot%2 == 1) //If we shoot more than one projectile, offset their angle and direction fired by the number of shots
                     angle = angle - spread + (radIncrement * (i+1)) + (radIncrement*(numProjectilesPerShot/2)); //There is a different formula for even/odd number of projectiles
@@ -272,4 +276,8 @@ public class PlayerAttack : MonoBehaviour {
         return chargeTime;
     }
 
+    private float GetMouseAngleToPlayer()
+    {
+        return Mathf.Atan2(Input.mousePosition.y - mainCamera.WorldToScreenPoint(transform.position).y, Input.mousePosition.x - mainCamera.WorldToScreenPoint(transform.position).x);
+    }
 }
