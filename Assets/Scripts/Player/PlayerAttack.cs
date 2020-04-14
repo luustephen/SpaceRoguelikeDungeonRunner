@@ -92,17 +92,21 @@ public class PlayerAttack : MonoBehaviour {
         }
         else if (chargeShot && Input.GetKey(secondaryAttack))
         {
+            float angle = GetMouseAngleToPlayer();
+            float y = Mathf.Sin(angle);
+            float x = Mathf.Cos(angle);
             if (Input.GetKeyDown(secondaryAttack))
             {
                 chargeTime = Time.time;
                 if (chargeSprite)
                 {
-                    float angle = GetMouseAngleToPlayer();
-                    float y = Mathf.Sin(angle);
-                    float x = Mathf.Cos(angle);
                     chargeSpriteInstance = Instantiate(chargeSprite, attackHitbox.position, Quaternion.identity, transform);
                     chargeSpriteInstance.transform.Translate(x, y, 0);
                 }
+            }
+            else
+            {
+                chargeSpriteInstance.transform.SetPositionAndRotation(new Vector3(transform.position.x+x, transform.position.y+y, transform.position.z),chargeSpriteInstance.transform.rotation);
             }
         }
         else
