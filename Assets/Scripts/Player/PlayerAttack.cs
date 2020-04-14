@@ -35,12 +35,12 @@ public class PlayerAttack : MonoBehaviour {
     private SpriteRenderer attackSprite;
     private BoxCollider2D attackCollider;
     private SphereCollider secondaryattackspriteCollider;
-    private int numSwingHitboxes;               //Odd number of swing hitboxes to create during swing
+    private int numSwingHitboxes;   //Odd number of swing hitboxes to create during swing
     private float swingIncrementWidth;
     public float swingWidth;
     public Rigidbody2D projectilePrefab;
     public Rigidbody2D projectileInstance;
-    public Rigidbody2D chargeSprite;
+    public Rigidbody2D chargeSprite; //Sprite that appears when charging a shot
     private Rigidbody2D chargeSpriteInstance;
     private Camera mainCamera;
     public float projectileSpeed = 1000;
@@ -51,12 +51,12 @@ public class PlayerAttack : MonoBehaviour {
     private bool followUpShot = false; //Whether the shot to be fired is automatically fired or player fired
     private float spread = Mathf.PI / 6; //Degrees of spread on split shot in radians (60 degrees)
     private bool isHoming = false; //do shots home onto targets
-    private float projectileWidthModifier = 1.0f;
+    private float projectileWidthModifier = 1.0f; //How fat the projectile is
     public int maxBounces = 0; //Number of bounces the projectile bounces
     private bool isExplosive = false;
     private bool chargeShot = false;
-    public float chargeTimeFull = .5f;
-    private float chargeTime = 0;
+    public float chargeTimeFull = .5f; //Minimum time needed to be able to fire a charged shot
+    private float chargeTime = 0; //Time the player has held down charge, must be greater than chargetimefull to fire
 
 
     // Use this for initialization
@@ -90,7 +90,7 @@ public class PlayerAttack : MonoBehaviour {
         {
             SecondaryAttack(numShots); 
         }
-        else if (chargeShot && Input.GetKey(secondaryAttack))
+        else if (chargeShot && Input.GetKey(secondaryAttack)) //If charge shot, create effect to signify it and count time before it can fire
         {
             float angle = GetMouseAngleToPlayer();
             float y = Mathf.Sin(angle);
@@ -98,18 +98,18 @@ public class PlayerAttack : MonoBehaviour {
             if (Input.GetKeyDown(secondaryAttack))
             {
                 chargeTime = Time.time;
-                if (chargeSprite)
+                if (chargeSprite) //Create effect
                 {
                     chargeSpriteInstance = Instantiate(chargeSprite, attackHitbox.position, Quaternion.identity, transform);
                     chargeSpriteInstance.transform.Translate(x, y, 0);
                 }
             }
-            else
+            else //Make the charge effect follow the player cursor
             {
                 chargeSpriteInstance.transform.SetPositionAndRotation(new Vector3(transform.position.x+x, transform.position.y+y, transform.position.z),chargeSpriteInstance.transform.rotation);
             }
         }
-        else
+        else //Reset time secondary atk button is held down
         {
             chargeTime = Time.time;
         }
@@ -180,7 +180,7 @@ public class PlayerAttack : MonoBehaviour {
             }
 
             secondaryOnCooldown = true;
-            StartCoroutine(SecondaryCooldown(shotsLeft-1));
+            StartCoroutine(SecondaryCooldown(shotsLeft-1)); //Start routine to put a cooldown on secondary atk
         }
     }
 
