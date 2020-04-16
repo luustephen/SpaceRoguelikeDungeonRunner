@@ -92,7 +92,14 @@ public class PlayerProjectile : MonoBehaviour {
 
             previousObjectHit = collision.gameObject;
 
-            rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
+            if (newVelocity != Vector2.zero)
+                rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
+            else
+            {
+                newVelocity = (contactPoint.point - (Vector2)player.transform.position);
+                newVelocity = newVelocity - (2 * Vector2.Dot(newVelocity, contactPoint.normal) * contactPoint.normal); //Find reflection vector
+                rb.AddForce( newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
+            }
             float angle = Mathf.Atan2(newVelocity.y, newVelocity.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle+90, Vector3.forward);
         }
@@ -118,7 +125,6 @@ public class PlayerProjectile : MonoBehaviour {
                         transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                         return;
                     }
-                    print(previousObjectHit);
                     Destroy(gameObject);
                 }
 

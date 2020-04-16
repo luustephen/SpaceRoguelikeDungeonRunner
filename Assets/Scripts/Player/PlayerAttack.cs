@@ -104,7 +104,7 @@ public class PlayerAttack : MonoBehaviour {
                     chargeSpriteInstance.transform.Translate(x, y, 0);
                 }
             }
-            else //Make the charge effect follow the player cursor
+            else if(chargeSpriteInstance) //Make the charge effect follow the player cursor
             {
                 chargeSpriteInstance.transform.SetPositionAndRotation(new Vector3(transform.position.x+x, transform.position.y+y, transform.position.z),chargeSpriteInstance.transform.rotation);
             }
