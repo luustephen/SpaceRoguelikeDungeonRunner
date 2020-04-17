@@ -47,14 +47,12 @@ public class PlayerHealth : MonoBehaviour {
     private ElementalEffects elementScript;
 
     Animator anim;
-    PlayerMovement playerMovement;
     bool isDead;
 
     // Use this for initialization
     void Awake()
     {
         anim = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>();
         currentHealth = startingHealth;
         sprite = GetComponent<SpriteRenderer>();
         originalMaterial = sprite.material;
@@ -91,7 +89,7 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isDead = true;
-        playerMovement.enabled = false;
+        movementScript.enabled = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -126,6 +124,8 @@ public class PlayerHealth : MonoBehaviour {
 
     IEnumerator Knockback(float knockbackTime)
     {
+        print("force " + knockbackForce);
+        print("direction " + knockbackDirection);
         rigidbody.AddForce(-knockbackForce * knockbackDirection, ForceMode2D.Impulse);
         movementScript.LockMovement();
         yield return new WaitForSeconds(knockbackTime);

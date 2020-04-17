@@ -909,7 +909,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592907201}
-  - component: {fileID: 592907202}
   - component: {fileID: 592907205}
   - component: {fileID: 592907203}
   - component: {fileID: 592907199}
@@ -1040,26 +1039,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &592907202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 592907197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff731f97693322b4d86f4fdb79efeef7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  up: 119
-  down: 115
-  left: 97
-  right: 100
-  jump: 32
-  speed: 0.02
-  maxSpeed: 0.1
-  node: {fileID: 0}
 --- !u!114 &592907203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1164,15 +1143,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592907197}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255e6923a47a4e848959d5c3b6373b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  runSpeed: 1
+  runSpeed: 10
   speedModifier: 1.5
-  rb: {fileID: 592907200}
+  node: {fileID: 0}
 --- !u!1 &602939507
 GameObject:
   m_ObjectHideFlags: 0

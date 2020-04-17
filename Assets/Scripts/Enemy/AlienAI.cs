@@ -20,7 +20,7 @@ public class AlienAI : MonoBehaviour
     private GameObject goal; //Node that the player is in SET THIS LATER
     private GameObject nodeToMove; //Node to move towards player
     private int nodeToMoveIndex = 1;
-    private PlayerMovement playerMovementScript;
+    private PlayerMovement2 playerMovementScript;
     private bool shouldMove = true;
     private bool setANewStart = true; //Should we set a new start point for a*
     public float howCloseToGet = .5f; //How close to get to each node before moving to next
@@ -33,7 +33,7 @@ public class AlienAI : MonoBehaviour
         numNodes = numColNodes * numColNodes;
         nodeArray = new GameObject[numRowNodes, numColNodes];
         player = GameObject.FindGameObjectWithTag("Player");
-        playerMovementScript = player.GetComponent<PlayerMovement>();
+        playerMovementScript = player.GetComponent<PlayerMovement2>();
     }
 
     // Update is called once per frame
