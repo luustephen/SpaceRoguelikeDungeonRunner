@@ -27,4 +27,16 @@ public class EnemyHealth : MonoBehaviour {
             }
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player Attack")
+        {
+            health--;
+            if (health == 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
 }

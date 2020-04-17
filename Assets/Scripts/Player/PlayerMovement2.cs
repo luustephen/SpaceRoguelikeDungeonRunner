@@ -8,6 +8,7 @@ public class PlayerMovement2 : MonoBehaviour {
     public float runSpeed;
     public float speedModifier = 1.5f;
     public Rigidbody2D rb;
+    private bool lockMovement = false;
 
     Vector2 movement; 
 
@@ -17,12 +18,14 @@ public class PlayerMovement2 : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
-        movement.x = Input.GetAxisRaw("Horizontal"); 
-        movement.y = Input.GetAxisRaw("Vertical");
-
-	}
+	void Update ()
+    {
+        if (!lockMovement)
+        {
+            movement.x = Input.GetAxisRaw("Horizontal");
+            movement.y = Input.GetAxisRaw("Vertical");
+        }
+    }
 
     void FixedUpdate()
     {
@@ -36,6 +39,15 @@ public class PlayerMovement2 : MonoBehaviour {
         {
             rb.velocity = movement * moveSpeed;
         }
+    }
 
+    public void LockMovement()
+    {
+        lockMovement = true;
+    }
+
+    public void UnlockMovement()
+    {
+        lockMovement = false;
     }
 }

@@ -71,6 +71,9 @@ public class PlayerProjectile : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag == "Enemy")
+            Destroy(gameObject);
+
         if (collision.gameObject.tag == "Player Attack")
         {
             Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), collision.gameObject.GetComponent<BoxCollider2D>());
@@ -94,7 +97,7 @@ public class PlayerProjectile : MonoBehaviour {
 
             if (newVelocity != Vector2.zero)
                 rb.AddForce(newVelocity.normalized * playerAttackScript.projectileSpeed); //Bounce off the wall at reflection angle
-            else
+            else //For the case where projectile spawn inside of an object already
             {
                 newVelocity = (contactPoint.point - (Vector2)player.transform.position);
                 newVelocity = newVelocity - (2 * Vector2.Dot(newVelocity, contactPoint.normal) * contactPoint.normal); //Find reflection vector

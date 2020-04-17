@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour {
     private Vector2 knockbackDirection;
     public float knockbackTime = .3f;
     public float knockbackForce = 5;
-    private PlayerMovement movementScript;
+    private PlayerMovement2 movementScript;
     private bool isBurning = false;
     private ElementalEffects elementScript;
 
@@ -59,7 +59,7 @@ public class PlayerHealth : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         originalMaterial = sprite.material;
         rigidbody = GetComponent<Rigidbody2D>();
-        movementScript = GetComponent<PlayerMovement>();
+        movementScript = GetComponent<PlayerMovement2>();
         elementScript = GetComponent<ElementalEffects>(); //Pick up the element of the player
     }
 

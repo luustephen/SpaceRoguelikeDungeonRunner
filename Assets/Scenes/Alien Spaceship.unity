@@ -1047,7 +1047,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592907197}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff731f97693322b4d86f4fdb79efeef7, type: 3}
   m_Name: 
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   blinkTime: 0.2
   transparent: {fileID: 2100000, guid: 3cee20aabd3d4464091d4d3a6772e3e3, type: 2}
   knockbackTime: 0.1
-  knockbackForce: 5
+  knockbackForce: 10
 --- !u!114 &592907204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1164,7 +1164,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592907197}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 255e6923a47a4e848959d5c3b6373b00, type: 3}
   m_Name: 
